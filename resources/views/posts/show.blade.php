@@ -4,6 +4,7 @@
 <div class="bg-gray-100 min-h-screen py-8">
     <div class="max-w-4xl mx-auto px-4">
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+
             <!-- Hlavička příspěvku -->
             <div class="p-6 flex justify-between items-start gap-6 bg-gray-50 border-b">
                 <div class="flex-1">
@@ -28,6 +29,23 @@
                     {!! $post->content !!}
                 </div>
             </div>
+
+
+            <!-- Náhledový obrázek nebo galerie -->
+            @if($post->thumbnail_path)
+                <!-- Pouze náhledový obrázek -->
+                <img src="{{ asset('storage/' . $post->thumbnail_path) }}" 
+                     alt="{{ $post->title }}"
+                     class="w-full h-96 object-cover">
+            @endif
+                <div class="flex justify-between items-center mb-4">
+                    <h1 class="text-2xl font-bold" style="color: #fed501;">{{ $post->title }}</h1>
+                    <span class="text-gray-600">{{ $post->category->name }}</span>
+                </div>
+                
+                <div class="prose prose-lg max-w-none mb-8 text-gray-800">
+                    {!! $post->content !!}
+                </div>
 
             @if($post->images->isNotEmpty())
                 <!-- Galerie -->
@@ -75,6 +93,7 @@
             @endif
 
             <div class="p-6">
+
                 <div class="mt-6">
                     <a href="{{ url()->previous() }}" 
                        class="px-4 py-2 rounded-lg transition-colors"
