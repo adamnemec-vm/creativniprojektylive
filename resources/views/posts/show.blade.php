@@ -31,21 +31,6 @@
             </div>
 
 
-            <!-- Náhledový obrázek nebo galerie -->
-            @if($post->thumbnail_path)
-                <!-- Pouze náhledový obrázek -->
-                <img src="{{ asset('storage/' . $post->thumbnail_path) }}" 
-                     alt="{{ $post->title }}"
-                     class="w-full h-96 object-cover">
-            @endif
-                <div class="flex justify-between items-center mb-4">
-                    <h1 class="text-2xl font-bold" style="color: #fed501;">{{ $post->title }}</h1>
-                    <span class="text-gray-600">{{ $post->category->name }}</span>
-                </div>
-                
-                <div class="prose prose-lg max-w-none mb-8 text-gray-800">
-                    {!! $post->content !!}
-                </div>
 
             @if($post->images->isNotEmpty())
                 <!-- Galerie -->
