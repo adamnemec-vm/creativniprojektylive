@@ -17,6 +17,24 @@
             margin-bottom: 1em !important;
         }
 
+        /* Mobile menu styles */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 999;
+            background-color: #fed501;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #mobile-menu.active {
+            transform: translateY(0);
+        }
+
+        /* Rest of existing styles */
         .prose ul {
             list-style-type: disc !important;
             padding-left: 1.5em !important;
@@ -104,9 +122,9 @@
 
                 <!-- Mobilní menu -->
                 <div id="mobile-menu" 
-                     class="hidden md:hidden fixed inset-0 border-b border-black transition-transform duration-300 z-50"
+                     class="hidden md:hidden fixed inset-0 transform transition-transform duration-300 ease-in-out z-40"
                      style="background-color: #fed501; margin-top: 5rem;">
-                    <div class="flex flex-col space-y-4 p-4">
+                    <div class="flex flex-col space-y-4 p-4 pt-8">
                         @foreach(\App\Models\Category::all() as $category)
                             <a href="{{ route('categories.show', $category) }}" 
                                class="text-black hover:text-gray-800 px-4 text-lg font-bold text-center">
@@ -162,7 +180,11 @@
             const scrollThreshold = 100;
             const burgerMenu = document.getElementById('burger-menu');
             const mobileMenu = document.getElementById('mobile-menu');
+            const burgerIcon = burgerMenu.querySelector('svg');
             let menuOpen = false;
+    
+            // Set initial transform state
+            mobileMenu.style.transform = 'translateY(-100%)';
     
             // Prevent scroll when menu is open
             function toggleScroll(disable) {
@@ -193,16 +215,20 @@
                 
                 menuOpen = !menuOpen;
                 burgerMenu.setAttribute('aria-expanded', String(menuOpen));
-                mobileMenu.classList.toggle('hidden');
-                toggleScroll(menuOpen);
-
-                // Update menu button appearance
-                const burgerIcon = burgerMenu.querySelector('svg');
+                
                 if (menuOpen) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.style.transform = 'translateY(0)';
                     burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
                 } else {
+                    mobileMenu.style.transform = 'translateY(-100%)';
+                    setTimeout(() => {
+                        mobileMenu.classList.add('hidden');
+                    }, 300);
                     burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
                 }
+                
+                toggleScroll(menuOpen);
             };
 
             // Initialize burger menu button accessibility
