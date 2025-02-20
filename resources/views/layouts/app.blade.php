@@ -46,6 +46,12 @@
         #burger-menu {
             z-index: 100000;
             position: relative;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease-in-out;
         }
 
         /* Rest of existing styles */
