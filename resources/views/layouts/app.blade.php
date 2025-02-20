@@ -292,14 +292,9 @@
                 let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
                 
                 if (currentScroll > scrollThreshold) {
-                    let opacity = Math.max(0, Math.min(1, 1 - (currentScroll - scrollThreshold) / 200));
+                    let opacity = Math.max(0.3, Math.min(1, 1 - (currentScroll - scrollThreshold) / 400));
                     header.style.opacity = opacity;
-                    
-                    if (opacity < 0.1) {
-                        header.style.pointerEvents = 'none';
-                    } else {
-                        header.style.pointerEvents = 'auto';
-                    }
+                    header.style.pointerEvents = 'auto';
                 } else {
                     header.style.opacity = '1';
                     header.style.pointerEvents = 'auto';
