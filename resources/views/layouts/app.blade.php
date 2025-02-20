@@ -103,7 +103,7 @@
 
         #overlay.active {
             visibility: visible;
-            opacity: 1;
+            opacity: 0;
         }
 
         /* Skrytí obsahu při otevřeném menu */
