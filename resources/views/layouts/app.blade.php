@@ -104,7 +104,7 @@
 
                 <!-- Mobilní menu -->
                 <div id="mobile-menu" 
-                     class="hidden md:hidden fixed top-0 left-0 right-0 border-b border-black transition-transform duration-300 z-40"
+                     class="hidden md:hidden fixed inset-0 border-b border-black transition-transform duration-300 z-50"
                      style="background-color: #fed501; margin-top: 5rem;">
                     <div class="flex flex-col space-y-4 p-4">
                         @foreach(\App\Models\Category::all() as $category)
@@ -161,7 +161,7 @@
         const scrollThreshold = 100;
         const burgerMenu = document.getElementById('burger-menu');
         const mobileMenu = document.getElementById('mobile-menu');
-
+    
         window.addEventListener('scroll', function() {
             let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
             
@@ -178,45 +178,65 @@
                 header.style.opacity = '1';
                 header.style.pointerEvents = 'auto';
             }
-
+    
             lastScrollTop = currentScroll;
         });
-
-        // Enhanced burger menu functionality
+    
+        // Enhanced burger menu functionality with iOS support
         const toggleMobileMenu = (event) => {
             event.preventDefault();
             event.stopPropagation();
+            
+            // Toggle aria-expanded state
+            burgerMenu.setAttribute('aria-expanded', 
+                burgerMenu.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
+            );
+            
             mobileMenu.classList.toggle('hidden');
         };
-
-        // Add both click and touchstart events
-        burgerMenu.addEventListener('click', toggleMobileMenu, { passive: false });
-        burgerMenu.addEventListener('touchstart', toggleMobileMenu, { passive: false });
-
-        // Close menu when clicking outside
+    
+        // Initialize burger menu button accessibility
+        burgerMenu.setAttribute('aria-expanded', 'false');
+        burgerMenu.setAttribute('aria-label', 'Toggle menu');
+    
+        // Remove click event to prevent double firing on iOS
+        burgerMenu.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            toggleMobileMenu(e);
+        }, { passive: false });
+    
+        // Close menu when clicking/touching outside
         document.addEventListener('click', (event) => {
             if (!mobileMenu.classList.contains('hidden') &&
                 !mobileMenu.contains(event.target) &&
                 !burgerMenu.contains(event.target)) {
                 mobileMenu.classList.add('hidden');
+                burgerMenu.setAttribute('aria-expanded', 'false');
             }
         });
-
-        // Handle touch events outside menu
+    
+        // Handle touch events outside menu with improved iOS support
         document.addEventListener('touchstart', (event) => {
             if (!mobileMenu.classList.contains('hidden') &&
                 !mobileMenu.contains(event.target) &&
                 !burgerMenu.contains(event.target)) {
                 mobileMenu.classList.add('hidden');
+                burgerMenu.setAttribute('aria-expanded', 'false');
             }
         }, { passive: true });
-
-        // Ensure menu links work on touch devices
+    
+        // Ensure menu links work on touch devices with improved handling
         const mobileMenuLinks = mobileMenu.getElementsByTagName('a');
         Array.from(mobileMenuLinks).forEach(link => {
             link.addEventListener('touchstart', (event) => {
                 event.stopPropagation();
             }, { passive: true });
+            
+            // Add click event for better iOS compatibility
+            link.addEventListener('click', (event) => {
+                mobileMenu.classList.add('hidden');
+                burgerMenu.setAttribute('aria-expanded', 'false');
+            });
         });
     </script>
 
