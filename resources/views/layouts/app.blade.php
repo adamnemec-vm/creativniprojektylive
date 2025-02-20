@@ -28,10 +28,12 @@
             background-color: #fed501;
             transform: translateY(-100%);
             transition: transform 0.3s ease-in-out;
+            display: none;
         }
 
         #mobile-menu.active {
             transform: translateY(0);
+            display: block;
         }
 
         /* Rest of existing styles */
@@ -66,7 +68,7 @@
     </style>
 </head>
 <body class="min-h-screen bg-gray-100">
-    <header class="fixed top-0 left-0 right-0 z-50 overflow-hidden transition-all duration-300"
+    <header class="fixed top-0 left-0 right-0 z-40 overflow-hidden transition-all duration-300"
             id="main-header"
             style="background-color: #fed501; border-bottom: 1px solid black;">
         <!-- Zkosené pozadí jako samostatný element -->
@@ -122,8 +124,8 @@
 
                 <!-- Mobilní menu -->
                 <div id="mobile-menu" 
-                     class="hidden md:hidden fixed inset-0 transform transition-transform duration-300 ease-in-out z-40"
-                     style="background-color: #fed501; margin-top: 5rem;">
+                     class="md:hidden fixed inset-0 transform transition-transform duration-300 ease-in-out z-50"
+                     style="background-color: #fed501; top: 0;">
                     <div class="flex flex-col space-y-4 p-4 pt-8">
                         @foreach(\App\Models\Category::all() as $category)
                             <a href="{{ route('categories.show', $category) }}" 
@@ -215,15 +217,20 @@
                 
                 menuOpen = !menuOpen;
                 burgerMenu.setAttribute('aria-expanded', String(menuOpen));
+                mobileMenu.style.display = 'block';
+                
+                // Force a reflow before applying the transform
+                mobileMenu.offsetHeight;
                 
                 if (menuOpen) {
-                    mobileMenu.classList.remove('hidden');
-                    mobileMenu.style.transform = 'translateY(0)';
+                    mobileMenu.classList.add('active');
                     burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
                 } else {
-                    mobileMenu.style.transform = 'translateY(-100%)';
+                    mobileMenu.classList.remove('active');
                     setTimeout(() => {
-                        mobileMenu.classList.add('hidden');
+                        if (!menuOpen) {
+                            mobileMenu.style.display = 'none';
+                        }
                     }, 300);
                     burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
                 }
