@@ -49,6 +49,7 @@
         }
 
         /* Rest of existing styles */
+
         .prose ul {
             list-style-type: disc !important;
             padding-left: 1.5em !important;
@@ -61,7 +62,6 @@
             margin-bottom: 0.5em !important;
         }
 
-        /* Vnořené seznamy */
         .prose ol ol {
             list-style-type: lower-alpha !important;
         }
@@ -77,30 +77,130 @@
         .prose ul ul ul {
             list-style-type: square !important;
         }
+
+        /* Overlay pro zakrytí obsahu při otevřeném menu */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999; /* Overlay bude pod menu, ale nad obsahem */
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s, opacity 0.3s;
+        }
+
+        #overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Skrytí obsahu při otevřeném menu */
+        body.menu-open {
+            overflow: hidden; /* Zamezí posouvání stránky */
+        }
+
+        /* Roztáhnutí hlavičky při otevřeném menu */
+        #main-header.active {
+            height: 100vh; /* Roztáhne hlavičku, aby se zobrazilo menu */
+        }
+
+        /* Ujistíme se, že menu bude nad overlay */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10000; /* Menu nad overlay */
+            background-color: #fed501;
+            transform: translateY(-100%);
+            visibility: hidden;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #mobile-menu.active {
+            transform: translateY(0);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Odkazy v menu jsou vždy viditelné a klikatelné */
+        #mobile-menu a {
+            z-index: 10001;
+        }
+
+        /* Zabráníme kliknutí na overlay, aby neinterferovalo s klikáním na menu */
+        #overlay.active {
+            pointer-events: none; /* Zamezí interakci s overlay */
+        }
+
+        /* Oprava pro ikonu X */
+        .burger-icon {
+            display: block;
+            width: 24px;
+            height: 24px;
+            position: relative;
+        }
+
+        .burger-icon span {
+            position: absolute;
+            background-color: black;
+            width: 100%;
+            height: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .burger-icon span:nth-child(1) {
+            top: 0;
+        }
+
+        .burger-icon span:nth-child(2) {
+            top: 10px;
+        }
+
+        .burger-icon span:nth-child(3) {
+            top: 20px;
+        }
+
+        .burger-icon.x span:nth-child(1) {
+            transform: rotate(45deg);
+            top: 10px;
+        }
+
+        .burger-icon.x span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-icon.x span:nth-child(3) {
+            transform: rotate(-45deg);
+            top: 10px;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gray-100">
     <header class="fixed top-0 left-0 right-0 z-50 overflow-hidden transition-all duration-300"
             id="main-header"
             style="background-color: #fed501; border-bottom: 1px solid black;">
-        <!-- Zkosené pozadí jako samostatný element -->
         <div class="absolute inset-0 z-0" 
              style="background-color: #fed501; clip-path: polygon(0 0, 100% 0, 100% 60%, 0 100%);">
         </div>
         
-        <!-- Obsah hlavičky -->
         <div class="relative z-10 container mx-auto px-4">
             <nav class="relative">
                 <div class="flex flex-col md:flex-row justify-between items-center" 
                      style="padding: 0.9rem 0 1.8rem;">
-                    <!-- Logo vlevo -->
                     <a href="{{ route('home') }}" class="text-2xl font-bold text-black flex items-center mb-4 md:mb-0 md:w-1/4">
-                        <img src="{{ asset('images/defaults/Logo.png') }}" 
-                             alt="Logo CHC" 
-                             class="h-10 w-auto">
+                        <img src="{{ asset('images/defaults/Logo.png') }}" alt="Logo CHC" class="h-10 w-auto">
                     </a>
 
-                    <!-- Menu uprostřed -->
                     <div class="hidden md:flex items-center justify-center space-x-8 md:w-2/4">
                         @foreach(\App\Models\Category::all() as $category)
                             <a href="{{ route('categories.show', $category) }}" 
@@ -110,7 +210,6 @@
                         @endforeach
                     </div>
 
-                    <!-- Pravá část -->
                     <div class="hidden md:flex items-center justify-end space-x-6 md:w-1/4">
                         <a href="{{ route('cooperation') }}" 
                            class="text-black hover:text-gray-800 text-lg font-bold">
@@ -128,16 +227,16 @@
 
                     <!-- Burger menu tlačítko -->
                     <button id="burger-menu" class="md:hidden absolute top-6 right-4 text-black hover:text-gray-800 z-30">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
+                        <div class="burger-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
                     </button>
                 </div>
 
                 <!-- Mobilní menu -->
-                <div id="mobile-menu" 
-                     class="md:hidden fixed inset-0 transform transition-transform duration-300 ease-in-out z-50"
-                     style="background-color: #fed501; top: 0;">
+                <div id="mobile-menu" class="md:hidden fixed inset-0 transform transition-transform duration-300 ease-in-out z-50" style="background-color: #fed501; top: 0;">
                     <div class="flex flex-col space-y-4 p-4 pt-8">
                         @foreach(\App\Models\Category::all() as $category)
                             <a href="{{ route('categories.show', $category) }}" 
@@ -164,9 +263,12 @@
         </div>
     </header>
 
-    <main class="pt-24">
+    <main class="pt-24" id="page-content">
         @yield('content')
     </main>
+
+    <!-- Overlay pro zašednutí obsahu -->
+    <div id="overlay"></div>
 
     <footer class="bg-gray-900 border-t border-yellow-600 py-6">
         <div class="container mx-auto px-4 text-center text-gray-400">
@@ -189,59 +291,36 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let lastScrollTop = 0;
-            const header = document.getElementById('main-header');
-            const scrollThreshold = 100;
             const burgerMenu = document.getElementById('burger-menu');
             const mobileMenu = document.getElementById('mobile-menu');
-            const burgerIcon = burgerMenu.querySelector('svg');
+            const overlay = document.getElementById('overlay');
+            const pageContent = document.getElementById('page-content');
+            const burgerIcon = burgerMenu.querySelector('.burger-icon');
             let menuOpen = false;
-    
-            const toggleMobileMenu = (event) => {
-                if (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                
+
+            const toggleMobileMenu = () => {
                 menuOpen = !menuOpen;
-                burgerMenu.setAttribute('aria-expanded', String(menuOpen));
-                
+
                 if (menuOpen) {
-                    mobileMenu.style.transform = 'translateY(0)';
-                    mobileMenu.style.visibility = 'visible';
-                    mobileMenu.style.opacity = '1';
-                    burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
-                    document.body.style.overflow = 'hidden';
+                    mobileMenu.classList.add('active');
+                    overlay.classList.add('active');
+                    pageContent.classList.add('content-hidden'); // Skryje obsah stránky
+                    document.body.classList.add('menu-open'); // Zamezí scrollování
+                    document.getElementById('main-header').classList.add('active'); // Roztáhne hlavičku
+                    burgerIcon.classList.add('x'); // Změní burger na X
                 } else {
-                    mobileMenu.style.transform = 'translateY(-100%)';
-                    mobileMenu.style.visibility = 'hidden';
-                    mobileMenu.style.opacity = '0';
-                    burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
-                    document.body.style.overflow = '';
+                    mobileMenu.classList.remove('active');
+                    overlay.classList.remove('active');
+                    pageContent.classList.remove('content-hidden'); // Obnoví viditelnost obsahu
+                    document.body.classList.remove('menu-open');
+                    document.getElementById('main-header').classList.remove('active'); // Reset hlavičky
+                    burgerIcon.classList.remove('x'); // Vrátí burger zpět
                 }
             };
-    
+
             burgerMenu.addEventListener('click', toggleMobileMenu);
-            burgerMenu.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                toggleMobileMenu();
-            });
-    
-            document.addEventListener('click', (event) => {
-                if (menuOpen && !mobileMenu.contains(event.target) && !burgerMenu.contains(event.target)) {
-                    toggleMobileMenu();
-                }
-            });
-    
-            const mobileMenuLinks = mobileMenu.getElementsByTagName('a');
-            Array.from(mobileMenuLinks).forEach(link => {
-                link.addEventListener('click', () => {
-                    toggleMobileMenu();
-                });
-            });
+            overlay.addEventListener('click', toggleMobileMenu);
         });
     </script>
-
-    @stack('scripts')
 </body>
 </html>
