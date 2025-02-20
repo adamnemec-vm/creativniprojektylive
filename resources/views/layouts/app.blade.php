@@ -166,11 +166,24 @@
     
             // Prevent scroll when menu is open
             function toggleScroll(disable) {
-                document.body.style.overflow = disable ? 'hidden' : '';
-                document.body.style.position = disable ? 'fixed' : '';
-                document.body.style.width = disable ? '100%' : '';
+                if (disable) {
+                    // Store current scroll position
+                    const scrollY = window.scrollY;
+                    document.body.style.position = 'fixed';
+                    document.body.style.top = `-${scrollY}px`;
+                    document.body.style.width = '100%';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    // Restore scroll position
+                    const scrollY = document.body.style.top;
+                    document.body.style.position = '';
+                    document.body.style.top = '';
+                    document.body.style.width = '';
+                    document.body.style.overflow = '';
+                    window.scrollTo(0, parseInt(scrollY || '0') * -1);
+                }
             }
-    
+
             // Enhanced burger menu functionality with iOS support
             const toggleMobileMenu = (event) => {
                 if (event) {
@@ -182,20 +195,42 @@
                 burgerMenu.setAttribute('aria-expanded', String(menuOpen));
                 mobileMenu.classList.toggle('hidden');
                 toggleScroll(menuOpen);
+
+                // Update menu button appearance
+                const burgerIcon = burgerMenu.querySelector('svg');
+                if (menuOpen) {
+                    burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+                } else {
+                    burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+                }
             };
-    
+
             // Initialize burger menu button accessibility
             burgerMenu.setAttribute('aria-expanded', 'false');
             burgerMenu.setAttribute('aria-label', 'Toggle menu');
-    
-            // Handle all touch events on burger menu
+
+            // Handle touch events on burger menu with improved iOS support
+            let touchStartY = 0;
+            let touchEndY = 0;
+            const touchThreshold = 10; // Minimum pixels for swipe detection
+
+            burgerMenu.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                touchStartY = e.touches[0].clientY;
+            }, { passive: false });
+
             burgerMenu.addEventListener('touchend', function(e) {
                 e.preventDefault();
-                toggleMobileMenu(e);
+                touchEndY = e.changedTouches[0].clientY;
+                
+                // Only toggle if it's a tap (not a swipe)
+                if (Math.abs(touchEndY - touchStartY) < touchThreshold) {
+                    toggleMobileMenu(e);
+                }
             }, { passive: false });
-    
-            // Prevent any default touch behavior on the menu button
-            burgerMenu.addEventListener('touchstart', function(e) {
+
+            // Prevent scrolling when touching the burger menu
+            burgerMenu.addEventListener('touchmove', function(e) {
                 e.preventDefault();
             }, { passive: false });
     
