@@ -43,6 +43,11 @@
             display: flex !important;
         }
 
+        #burger-menu {
+            z-index: 100000;
+            position: relative;
+        }
+
         /* Rest of existing styles */
         .prose ul {
             list-style-type: disc !important;
