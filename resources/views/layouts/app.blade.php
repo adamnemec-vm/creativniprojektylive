@@ -68,16 +68,16 @@
     </style>
 </head>
 <body class="min-h-screen bg-gray-100">
-    <header class="fixed top-0 left-0 right-0 z-40 overflow-hidden transition-all duration-300"
+    <header class="fixed top-0 left-0 right-0 z-50 overflow-hidden transition-all duration-300"
             id="main-header"
             style="background-color: #fed501; border-bottom: 1px solid black;">
         <!-- Zkosené pozadí jako samostatný element -->
-        <div class="absolute inset-0" 
+        <div class="absolute inset-0 z-0" 
              style="background-color: #fed501; clip-path: polygon(0 0, 100% 0, 100% 60%, 0 100%);">
         </div>
         
         <!-- Obsah hlavičky -->
-        <div class="relative z-20 container mx-auto px-4">
+        <div class="relative z-10 container mx-auto px-4">
             <nav class="relative">
                 <div class="flex flex-col md:flex-row justify-between items-center" 
                      style="padding: 0.9rem 0 1.8rem;">
@@ -292,11 +292,8 @@
                 let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
                 
                 if (currentScroll > scrollThreshold) {
-                    let opacity = Math.max(0.3, Math.min(1, 1 - (currentScroll - scrollThreshold) / 400));
-                    header.style.opacity = opacity;
                     header.style.pointerEvents = 'auto';
                 } else {
-                    header.style.opacity = '1';
                     header.style.pointerEvents = 'auto';
                 }
     
