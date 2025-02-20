@@ -27,10 +27,10 @@
             z-index: 99999;
             background-color: #fed501;
             transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
             visibility: hidden;
             opacity: 0;
-            display: flex;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -40,7 +40,7 @@
             transform: translateY(0);
             visibility: visible;
             opacity: 1;
-            display: flex;
+            display: flex !important;
         }
 
         /* Rest of existing styles */
@@ -202,17 +202,23 @@
                 burgerMenu.setAttribute('aria-expanded', String(menuOpen));
                 
                 if (menuOpen) {
-                    mobileMenu.style.transform = 'translateY(0)';
-                    mobileMenu.style.visibility = 'visible';
-                    mobileMenu.style.opacity = '1';
-                    burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
-                    document.body.style.overflow = 'hidden';
+                    mobileMenu.style.display = 'flex';
+                    setTimeout(() => {
+                        mobileMenu.style.transform = 'translateY(0)';
+                        mobileMenu.style.visibility = 'visible';
+                        mobileMenu.style.opacity = '1';
+                        burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+                        document.body.style.overflow = 'hidden';
+                    }, 10);
                 } else {
                     mobileMenu.style.transform = 'translateY(-100%)';
                     mobileMenu.style.visibility = 'hidden';
                     mobileMenu.style.opacity = '0';
                     burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
                     document.body.style.overflow = '';
+                    setTimeout(() => {
+                        mobileMenu.style.display = 'none';
+                    }, 300);
                 }
             };
     
