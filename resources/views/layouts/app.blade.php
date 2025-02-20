@@ -29,11 +29,13 @@
             transform: translateY(-100%);
             transition: transform 0.3s ease-in-out;
             display: none;
+            opacity: 0;
         }
 
         #mobile-menu.active {
             transform: translateY(0);
             display: block;
+            opacity: 1;
         }
 
         /* Rest of existing styles */
@@ -217,22 +219,23 @@
                 
                 menuOpen = !menuOpen;
                 burgerMenu.setAttribute('aria-expanded', String(menuOpen));
-                mobileMenu.style.display = 'block';
-                
-                // Force a reflow before applying the transform
-                mobileMenu.offsetHeight;
+                burgerMenu.setAttribute('aria-expanded', String(menuOpen));
                 
                 if (menuOpen) {
+                    mobileMenu.style.display = 'block';
+                    // Force a reflow
+                    mobileMenu.offsetHeight;
                     mobileMenu.classList.add('active');
                     burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
                 } else {
                     mobileMenu.classList.remove('active');
+                    burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+                    // Wait for transition to complete before hiding
                     setTimeout(() => {
                         if (!menuOpen) {
                             mobileMenu.style.display = 'none';
                         }
                     }, 300);
-                    burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
                 }
                 
                 toggleScroll(menuOpen);
