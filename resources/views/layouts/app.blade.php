@@ -158,38 +158,68 @@
     <script>
         let lastScrollTop = 0;
         const header = document.getElementById('main-header');
-        const scrollThreshold = 100; // Práh pro začátek mizení
+        const scrollThreshold = 100;
+        const burgerMenu = document.getElementById('burger-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
 
         window.addEventListener('scroll', function() {
             let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
             
             if (currentScroll > scrollThreshold) {
-                // Výpočet opacity na základě scrollu
                 let opacity = Math.max(0, Math.min(1, 1 - (currentScroll - scrollThreshold) / 200));
                 header.style.opacity = opacity;
                 
-                // Pokud je opacity velmi nízká, skryjeme header úplně
                 if (opacity < 0.1) {
                     header.style.pointerEvents = 'none';
                 } else {
                     header.style.pointerEvents = 'auto';
                 }
             } else {
-                // Nad prahem zobrazíme header plně
                 header.style.opacity = '1';
                 header.style.pointerEvents = 'auto';
             }
 
-            // Aktualizace poslední pozice scrollu
             lastScrollTop = currentScroll;
         });
 
-        // Burger menu funkcionalita
-        document.getElementById('burger-menu').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+        // Enhanced burger menu functionality
+        const toggleMobileMenu = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            mobileMenu.classList.toggle('hidden');
+        };
+
+        // Add both click and touchstart events
+        burgerMenu.addEventListener('click', toggleMobileMenu, { passive: false });
+        burgerMenu.addEventListener('touchstart', toggleMobileMenu, { passive: false });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!mobileMenu.classList.contains('hidden') &&
+                !mobileMenu.contains(event.target) &&
+                !burgerMenu.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // Handle touch events outside menu
+        document.addEventListener('touchstart', (event) => {
+            if (!mobileMenu.classList.contains('hidden') &&
+                !mobileMenu.contains(event.target) &&
+                !burgerMenu.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        }, { passive: true });
+
+        // Ensure menu links work on touch devices
+        const mobileMenuLinks = mobileMenu.getElementsByTagName('a');
+        Array.from(mobileMenuLinks).forEach(link => {
+            link.addEventListener('touchstart', (event) => {
+                event.stopPropagation();
+            }, { passive: true });
         });
     </script>
 
     @stack('scripts')
 </body>
-</html> 
+</html>
