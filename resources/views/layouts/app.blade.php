@@ -32,8 +32,9 @@
             opacity: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding-top: 80px;
         }
 
         #mobile-menu.active {
@@ -45,7 +46,9 @@
 
         #burger-menu {
             z-index: 100000;
-            position: relative;
+            position: absolute;
+            top: 1.5rem;
+            right: 1rem;
             width: 24px;
             height: 24px;
             display: flex;
