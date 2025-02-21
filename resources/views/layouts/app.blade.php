@@ -27,26 +27,17 @@
             z-index: 99999;
             background-color: #fed501;
             transform: translateY(-100%);
-            transition: all 0.3s ease-in-out;
-            visibility: hidden;
-            opacity: 0;
+            transition: transform 0.3s ease-in-out;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;
             padding-top: 80px;
-            -webkit-transform: translateY(-100%);
-            -webkit-transition: all 0.3s ease-in-out;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
+            pointer-events: none;
         }
 
         #mobile-menu.active {
             transform: translateY(0);
-            -webkit-transform: translateY(0);
-            visibility: visible;
-            opacity: 1;
-            display: flex;
             pointer-events: auto;
         }
 
@@ -316,22 +307,21 @@
 
             const toggleMobileMenu = () => {
                 menuOpen = !menuOpen;
-
-                if (menuOpen) {
-                    mobileMenu.classList.add('active');
-                    overlay.classList.add('active');
-                    pageContent.classList.add('content-hidden'); // Skryje obsah stránky
-                    document.body.classList.add('menu-open'); // Zamezí scrollování
-                    document.getElementById('main-header').classList.add('active'); // Roztáhne hlavičku
-                    burgerIcon.classList.add('x'); // Změní burger na X
-                } else {
-                    mobileMenu.classList.remove('active');
-                    overlay.classList.remove('active');
-                    pageContent.classList.remove('content-hidden'); // Obnoví viditelnost obsahu
-                    document.body.classList.remove('menu-open');
-                    document.getElementById('main-header').classList.remove('active'); // Reset hlavičky
-                    burgerIcon.classList.remove('x'); // Vrátí burger zpět
-                }
+                requestAnimationFrame(() => {
+                    if (menuOpen) {
+                        mobileMenu.classList.add('active');
+                        overlay.classList.add('active');
+                        document.body.classList.add('menu-open');
+                        document.getElementById('main-header').classList.add('active');
+                        burgerIcon.classList.add('x');
+                    } else {
+                        mobileMenu.classList.remove('active');
+                        overlay.classList.remove('active');
+                        document.body.classList.remove('menu-open');
+                        document.getElementById('main-header').classList.remove('active');
+                        burgerIcon.classList.remove('x');
+                    }
+                });
             };
 
             burgerMenu.addEventListener('click', toggleMobileMenu);
