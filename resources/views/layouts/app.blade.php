@@ -27,7 +27,7 @@
             z-index: 99999;
             background-color: #fed501;
             transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
             visibility: hidden;
             opacity: 0;
             display: flex;
@@ -35,13 +35,19 @@
             justify-content: flex-start;
             align-items: flex-start;
             padding-top: 80px;
+            -webkit-transform: translateY(-100%);
+            -webkit-transition: all 0.3s ease-in-out;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
 
         #mobile-menu.active {
             transform: translateY(0);
+            -webkit-transform: translateY(0);
             visibility: visible;
             opacity: 1;
             display: flex;
+            pointer-events: auto;
         }
 
         #burger-menu {
@@ -103,7 +109,8 @@
 
         #overlay.active {
             visibility: visible;
-            opacity: 0;
+            opacity: 0.5;
+            pointer-events: auto;
         }
 
         /* Skrytí obsahu při otevřeném menu */
@@ -245,8 +252,8 @@
                 </div>
 
                 <!-- Mobilní menu -->
-                <div id="mobile-menu" class="md:hidden fixed inset-0 transform transition-transform duration-300 ease-in-out z-50" style="background-color: #fed501; top: 0;">
-                    <div class="flex flex-col space-y-4 p-4 pt-8">
+                <div id="mobile-menu" class="md:hidden fixed inset-0 transform transition-transform duration-300 ease-in-out z-50" style="background-color: #fed501; top: 0; -webkit-overflow-scrolling: touch;">
+                    <div class="flex flex-col space-y-4 p-4 pt-20 min-h-screen w-full">
                         @foreach(\App\Models\Category::all() as $category)
                             <a href="{{ route('categories.show', $category) }}" 
                                class="text-black hover:text-gray-800 px-4 text-lg font-bold text-center">
