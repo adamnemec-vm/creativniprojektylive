@@ -232,14 +232,16 @@
                         </a>
                     </div>
 
-                    <!-- Burger menu tlačítko -->
-                    <button id="burger-menu" class="md:hidden absolute top-6 right-4 text-black hover:text-gray-800 z-30">
-                        <div class="burger-icon">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </button>
+                    <!-- Burger menu container -->
+                    <div class="block md:hidden">
+                        <button id="burger-menu" class="absolute top-6 right-4 text-black hover:text-gray-800 z-30">
+                            <div class="burger-icon">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Mobilní menu -->
