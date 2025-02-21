@@ -233,7 +233,7 @@
                     </div>
 
                     <!-- Burger menu tlačítko -->
-                    <button id="burger-menu" class="md:hidden absolute top-6 right-4 text-black hover:text-gray-800 z-30">
+                    <button id="burger-menu" class="block md:hidden absolute top-6 right-4 text-black hover:text-gray-800 z-30">
                         <div class="burger-icon">
                             <span></span>
                             <span></span>
