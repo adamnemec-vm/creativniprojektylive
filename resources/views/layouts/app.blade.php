@@ -190,6 +190,20 @@
             transform: rotate(-45deg);
             top: 10px;
         }
+        /* Responsive video styles */
+        .prose iframe {
+            max-width: 100%;
+            width: 100%;
+            aspect-ratio: 16/9;
+            height: auto;
+        }
+
+        .prose .mce-content-body iframe {
+            max-width: 100%;
+            width: 100%;
+            aspect-ratio: 16/9;
+            height: auto;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gray-100">
