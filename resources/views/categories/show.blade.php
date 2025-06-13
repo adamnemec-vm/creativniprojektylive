@@ -1,11 +1,30 @@
+
 @extends('layouts.app')
 
 @section('content')
 <div class="bg-gray-100 min-h-screen pt-8">
     <div class="container mx-auto px-8 lg:px-16">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold mb-4" style="color: #fed501;">{{ $category->name }}</h1>
-            <p class="text-gray-600">{{ $category->description }}</p>
+        <div class="mb-12 bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="border-t-4" style="border-color: #fed501;">
+                <div class="p-8">
+                    <h1 class="text-3xl font-bold mb-6" style="color: #fed501;">{{ $category->name }}</h1>
+                    <div class="text-gray-600 space-y-4">
+                        @foreach(explode("\n", $category->description) as $paragraph)
+                            @if(trim($paragraph))
+                                <p>{{ trim($paragraph) }}</p>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative mb-16">
+            <div class="absolute top-0 left-0 right-0 transform -translate-y-1/2">
+                <h2 class="text-3xl font-bold text-center text-black bg-gray-100 mx-auto w-max px-8 py-4 rounded-full">
+                    Aktuality z oboru
+                </h2>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -60,4 +79,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection
