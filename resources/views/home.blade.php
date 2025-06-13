@@ -9,7 +9,7 @@
                 <div class="container mx-auto px-4">
                     <div class="max-w-7xl mx-auto">
                         <p class="text-xl text-gray-600 text-center mb-4">
-                            Projekty našich studentů
+                            Projekty Creative Hill College
                         </p>
                         <h2 class="text-4xl md:text-5xl font-extrabold mb-16 text-center font-display" style="color: #fed501;">
                             Naše obory
@@ -26,9 +26,7 @@
                                         <h3 class="text-2xl font-bold" style="color: #fed501;">Vývojáři</h3>
                                     </div>
                                     <p class="leading-relaxed text-black flex-grow">
-                                        Naši vývojáři se specializují na tvorbu moderních webových a mobilních aplikací. 
-                                        Využíváme nejnovější technologie a postupy pro vytváření efektivních a 
-                                        bezpečných řešení. Klademe důraz na kvalitní kód a uživatelskou přívětivost.
+                                        Naši vývojáři se zaměřují na tvorbu moderních webových a mobilních aplikací s důrazem na efektivitu, bezpečnost a skvělý uživatelský zážitek. Využíváme nejnovější technologie a dbáme na čistý, kvalitní kód.
                                     </p>
                                 </div>
                             </div>
@@ -43,9 +41,7 @@
                                         <h3 class="text-2xl font-bold" style="color: #fed501;">Grafici</h3>
                                     </div>
                                     <p class="leading-relaxed text-black flex-grow">
-                                        Náš grafický tým vytváří jedinečné vizuální identity a designová řešení. 
-                                        Od loga přes webdesign až po komplexní brandingové strategie. 
-                                        Kombinujeme kreativitu s funkčností pro maximální efekt.
+                                        Náš grafický tým tvoří originální vizuální identity a designová řešení – od loga a webdesignu až po komplexní branding. Spojujeme kreativitu s funkčností, aby každý projekt vynikl a oslovil cílovou skupinu.
                                     </p>
                                 </div>
                             </div>
@@ -60,9 +56,7 @@
                                         <h3 class="text-2xl font-bold" style="color: #fed501;">Filmaři</h3>
                                     </div>
                                     <p class="leading-relaxed text-black flex-grow">
-                                        Zachycujeme příběhy prostřednictvím videí a filmů. Specializujeme se na 
-                                        reklamní spoty, dokumentární tvorbu a firemní prezentace. Každý projekt 
-                                        je pro nás jedinečnou příležitostí vytvořit něco výjimečného.
+                                        Vyprávíme příběhy prostřednictvím obrazu a zvuku. Dokážeme stvořit reklamní spot, dokumentární snímek či třeba krátký film o vaší firmě. Naši mladí filmaři jsou plní neotřelých nápadů.
                                     </p>
                                 </div>
                             </div>
