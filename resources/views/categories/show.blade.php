@@ -4,7 +4,7 @@
 @section('content')
 <div class="bg-gray-100 min-h-screen pt-8">
     <div class="container mx-auto px-8 lg:px-16">
-        <div class="mb-12 bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="mb-24 bg-white rounded-lg shadow-lg overflow-hidden">
             <div class="border-t-4" style="border-color: #fed501;">
                 <div class="p-8">
                     <h1 class="text-3xl font-bold mb-6" style="color: #fed501;">{{ $category->name }}</h1>
@@ -19,9 +19,9 @@
             </div>
         </div>
 
-        <div class="relative mb-16">
-            <div class="absolute top-0 left-0 right-0 transform -translate-y-1/2">
-                <h2 class="text-3xl font-bold text-center text-black bg-gray-100 mx-auto w-max px-8 py-4 rounded-full">
+        <div class="relative mb-24 mt-8">
+            <div class="absolute top-0 left-0 right-0 transform -translate-y-1/2 z-10">
+                <h2 class="text-3xl font-bold text-center text-black bg-gray-100 mx-auto w-max px-8 py-4 rounded-full shadow-lg">
                     Aktuality z oboru
                 </h2>
             </div>
