@@ -4,7 +4,7 @@
 @section('content')
 <div class="bg-gray-100 min-h-screen pt-8">
     <div class="container mx-auto px-8 lg:px-16">
-        <div class="mb-24 bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden pb-32">
             <div class="border-t-4" style="border-color: #fed501;">
                 <div class="p-8">
                     <h1 class="text-3xl font-bold mb-6" style="color: #fed501;">{{ $category->name }}</h1>
@@ -18,21 +18,16 @@
                 </div>
             </div>
         </div>
+        <div class="h-12"></div> <!-- Empty block for vertical spacing -->
 
-        <div class="relative mb-24 mt-8">
-            <div class="absolute top-0 left-0 right-0 transform -translate-y-1/2 z-10">
-                <h2 class="text-3xl font-bold text-center text-black bg-gray-100 mx-auto w-max px-8 py-4 rounded-full shadow-lg">
-                    Aktuality z oboru
-                </h2>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div>
+        <div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($posts as $post)
                 <a href="{{ route('posts.show', $post) }}" class="block group">
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden relative h-full flex flex-col transition-transform duration-300 hover:-translate-y-2">
                         <div class="absolute top-2 right-2 z-10">
-                            <span class="bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm" 
+                            <span class="bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm"
                                   style="color: #fed501;">
                                 {{ $post->category->name }}
                             </span>
@@ -40,15 +35,15 @@
 
                         <div class="overflow-hidden h-64 flex-shrink-0">
                             @if($post->thumbnail_path)
-                                <img src="{{ asset('storage/' . $post->thumbnail_path) }}" 
+                                <img src="{{ asset('storage/' . $post->thumbnail_path) }}"
                                      alt="{{ $post->title }}"
                                      class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
                             @elseif($post->images->isNotEmpty())
-                                <img src="{{ asset('storage/' . $post->images->first()->image_path) }}" 
+                                <img src="{{ asset('storage/' . $post->images->first()->image_path) }}"
                                      alt="{{ $post->title }}"
                                      class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
                             @else
-                                <img src="{{ asset('images/defaults/default.jpg') }}" 
+                                <img src="{{ asset('images/defaults/default.jpg') }}"
                                      alt="{{ $post->title }}"
                                      class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
                             @endif

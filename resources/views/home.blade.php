@@ -91,8 +91,8 @@
     <!-- Sekce s příspěvky -->
     <div class="relative bg-gray-100">
         <!-- Nadpis -->
-        <div class="absolute top-0 left-0 right-0 transform -translate-y-1/2">
-            <h2 class="text-3xl font-bold text-center text-black bg-gray-100 mx-auto w-max px-8 py-4 rounded-full">
+        <div class="absolute top-0 left-0 right-0 transform -translate-y-1/2 flex justify-center">
+            <h2 class="text-3xl font-bold text-center px-8 py-4 rounded-full shadow-lg" style="color: #fed501; background: #f8fafc;">
                 Nejnovější příspěvky
             </h2>
         </div>
@@ -154,4 +154,4 @@
             </div>
         </div>
     </div>
-@endsection 
+@endsection
