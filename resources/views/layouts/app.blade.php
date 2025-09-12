@@ -209,7 +209,7 @@
 <body class="min-h-screen bg-gray-100">
     <header class="fixed top-0 left-0 right-0 z-50 overflow-hidden transition-all duration-300"
             id="main-header"
-            style="background-color: #fed501; border-bottom: 1px solid black;">
+            style="background-color: #fed501; border-bottom: 1px solid white;">
         <div class="absolute inset-0 z-0" 
              style="background-color: #fed501; clip-path: polygon(0 0, 100% 0, 100% 60%, 0 100%);">
         </div>
