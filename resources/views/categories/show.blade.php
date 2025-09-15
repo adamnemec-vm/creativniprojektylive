@@ -8,20 +8,25 @@
             <div class="border-t-4" style="border-color: #fed501;">
                 <div class="p-8">
                     <h1 class="text-3xl font-bold mb-6" style="color: #fed501;">{{ $category->name }}</h1>
-                    <div class="text-gray-600 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-600">
                         @foreach(explode("\n", $category->description) as $paragraph)
                             @if(trim($paragraph))
-                                <p>{{ trim($paragraph) }}</p>
+                                <p class="p-4">
+                                    {{ trim($paragraph) }}
+                                </p>
                             @endif
                         @endforeach
                     </div>
+
+
+
                 </div>
             </div>
         </div>
         <div class="h-12"></div> <!-- Empty block for vertical spacing -->
 
         <div>
-        <div>
+        <div class="container mx-auto px-4 pt-4 pb-16">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($posts as $post)
                 <a href="{{ route('posts.show', $post) }}" class="block group">
