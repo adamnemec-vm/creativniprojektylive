@@ -7,7 +7,7 @@
             <div class="bg-white rounded-xl shadow-md overflow-hidden">
                 <div class="p-8">
                     <h1 class="text-4xl font-bold mb-8 text-yellow-500">Spolupráce</h1>
-                    
+
                     <div class="prose max-w-none text-gray-700 mb-12">
                         <p class="mb-6">
                             Ve výuce na Creative Hill College podporujeme moderní výukové metody s využitím digitálních technologií a pomáháme studentům rozvíjet znalosti a dovednosti pro jejich budoucí profesní uplatnění.
@@ -42,7 +42,7 @@
 
                         <!-- Multimedia and Digital Design Section -->
                         <h2 class="text-xl font-bold mt-8 mb-4 text-black">Multimédia a digitální design</h2>
-                        
+
                         <!-- First Teacher -->
                         <div class="flex flex-col md:flex-row gap-6 p-6 bg-gray-50 rounded-lg mb-6">
                             <div class="w-32 h-32 flex-shrink-0">
@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Second Teacher -->
                         <div class="flex flex-col md:flex-row gap-6 p-6 bg-gray-50 rounded-lg">
                             <div class="w-32 h-32 flex-shrink-0">
@@ -78,7 +78,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Media Production Section -->
                         <h2 class="text-xl font-bold mt-8 mb-4 text-black">Mediální tvorba</h2>
                         <div class="flex flex-col md:flex-row gap-6 p-6 bg-gray-50 rounded-lg">
@@ -126,21 +126,8 @@
                         </a>
                     </div>
                 </div>
-                
-                <div class="border-t border-gray-200 pt-6 text-base text-gray-600 space-y-2">
-                    <h4 class="font-bold text-lg text-black mb-3">STŘEDNÍ ŠKOLA FILMOVÁ, MULTIMEDIÁLNÍ A POČÍTAČOVÝCH TECHNOLOGIÍ, s.r.o.</h4>
-                    <p class="flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                        Filmová 174, 760 01 Zlín
-                    </p>
-                    <p>IČ: 29373883</p>
-                    <p>B.Ú.: 7798397001/5500</p>
-                    <p>IBAN: CZ26 5500 0000 0077 9839 7001</p>
-                    <p>Datová schránka: 5m2mbkn</p>
-                </div>
+
+
             </div>
         </div>
     </div>
