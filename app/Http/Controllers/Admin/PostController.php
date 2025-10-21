@@ -66,6 +66,7 @@ class PostController extends Controller
             'title' => 'required|max:255',
             'content' => 'required',
             'category_id' => 'required|exists:categories,id',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
