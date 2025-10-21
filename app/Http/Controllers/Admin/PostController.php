@@ -67,11 +67,28 @@ class PostController extends Controller
             'content' => 'required',
             'category_id' => 'required|exists:categories,id',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $post->update($validated);
+        // Aktualizujeme pouze základní údaje, ne obrázky
+        $post->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            'category_id' => $request->category_id
+        ]);
 
+        // Zpracování thumbnail
+        if ($request->hasFile('thumbnail')) {
+            // Smažeme starý thumbnail, pokud existuje
+            if ($post->thumbnail_path) {
+                Storage::disk('public')->delete($post->thumbnail_path);
+            }
+            
+            $path = $request->file('thumbnail')->store('posts/thumbnails', 'public');
+            $post->update(['thumbnail_path' => $path]);
+        }
+
+        // Zpracování dalších obrázků
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('posts', 'public');
@@ -92,4 +109,4 @@ class PostController extends Controller
         $post->delete();
         return redirect()->route('admin.posts.index')->with('success', 'Příspěvek byl úspěšně smazán.');
     }
-} 
+}
