@@ -108,5 +108,11 @@
                 });
             }
         });
+        
+        // Zajistí, že obsah TinyMCE bude odeslán s formulářem
+        document.querySelector('form').addEventListener('submit', function() {
+            // Uloží obsah editoru do textarey před odesláním formuláře
+            tinymce.triggerSave();
+        });
     </script>
-@endsection 
+@endsection
