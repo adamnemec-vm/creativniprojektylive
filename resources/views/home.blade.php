@@ -12,7 +12,7 @@
                             Projekty Creative Hill College
                         </p>
                         <h2 class="text-4xl md:text-5xl font-extrabold mb-16 text-center font-display" style="color: #fed501;">
-                            Naše obory
+                            Naše zaměření
                         </h2>
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
