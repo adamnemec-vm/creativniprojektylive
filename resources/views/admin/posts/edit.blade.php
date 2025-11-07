@@ -48,17 +48,14 @@
                                 <img src="{{ asset('storage/' . $image->image_path) }}" 
                                      alt="Obrázek příspěvku"
                                      class="w-full h-32 object-cover rounded-lg">
-                                <form action="{{ route('admin.images.destroy', $image) }}" 
-                                      method="POST"
-                                      class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="text-red-500 hover:text-red-400"
-                                            onclick="return confirm('Opravdu chcete smazat tento obrázek?')">
+                                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button type="button" 
+                                            class="text-red-500 hover:text-red-400 delete-image-btn"
+                                            data-image-id="{{ $image->id }}"
+                                            onclick="deleteImage({{ $image->id }}, this)">
                                         Smazat
                                     </button>
-                                </form>
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -114,5 +111,32 @@
             // Uloží obsah editoru do textarey před odesláním formuláře
             tinymce.triggerSave();
         });
+
+        // Funkce pro mazání obrázků pomocí AJAX
+        function deleteImage(imageId, buttonElement) {
+            if (confirm('Opravdu chcete smazat tento obrázek?')) {
+                fetch('{{ route('admin.images.destroy', '') }}/' + imageId, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Odstraníme obrázek z DOM
+                        buttonElement.closest('.relative.group').remove();
+                        console.log('Obrázek byl úspěšně smazán');
+                    } else {
+                        alert('Chyba při mazání obrázku');
+                    }
+                })
+                .catch(error => {
+                    console.error('Chyba při mazání obrázku:', error);
+                    alert('Chyba při mazání obrázku');
+                });
+            }
+        }
     </script>
 @endsection
