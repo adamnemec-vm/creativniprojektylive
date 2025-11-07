@@ -24,12 +24,12 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
+      $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:6144',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:6144'
         ]);
 
         $post = Post::create([
@@ -63,11 +63,11 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         $validated = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:6144',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:6144'
         ]);
 
         // Aktualizujeme pouze základní údaje, ne obrázky
