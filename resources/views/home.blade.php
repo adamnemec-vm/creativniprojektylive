@@ -152,6 +152,10 @@
                     </div>
                 @endforelse
             </div>
+            
+            <div class="mt-8">
+                {{ $posts->links() }}
+            </div>
         </div>
     </div>
 @endsection

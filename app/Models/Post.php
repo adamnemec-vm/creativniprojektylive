@@ -12,7 +12,8 @@ class Post extends Model
         'title',
         'content',
         'category_id',
-        'thumbnail_path'
+        'thumbnail_path',
+        'slug'
     ];
 
     public function category(): BelongsTo
@@ -23,5 +24,10 @@ class Post extends Model
     public function images(): HasMany
     {
         return $this->hasMany(Image::class);
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 } 

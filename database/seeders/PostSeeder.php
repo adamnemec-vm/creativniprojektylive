@@ -5,40 +5,31 @@ namespace Database\Seeders;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Faker\Factory as Faker;
 
 class PostSeeder extends Seeder
 {
     public function run(): void
     {
         $categories = Category::all();
-        $sampleImages = ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg']; // názvy vašich obrázků
+        $faker = Faker::create('cs_CZ');
         
         foreach ($categories as $category) {
-            for ($i = 1; $i <= 5; $i++) {
+            for ($i = 1; $i <= 8; $i++) {
+                $title = $this->getTitleForCategory($category->name, $i, $faker);
+                
                 $post = Post::create([
-                    'title' => $this->getTitleForCategory($category->name, $i),
-                    'content' => $this->getContentForCategory($category->name),
+                    'title' => $title,
+                    'content' => $this->getContentForCategory($category->name, $faker),
                     'category_id' => $category->id,
+                    'slug' => Str::slug($title) . '-' . uniqid(),
                 ]);
-
-                // Přidáme obrázek jen k některým příspěvkům (např. k sudým)
-                if ($i % 2 == 0) {
-                    $sourcePath = public_path('storage/posts/first_image.jpg');
-                    if (File::exists($sourcePath)) {
-                        // Použijeme náhodný obrázek z kolekce
-                        $randomImage = $sampleImages[array_rand($sampleImages)];
-                        $newPath = 'posts/' . uniqid() . '.jpg';
-                        Storage::disk('public')->copy('posts/' . $randomImage, $newPath);
-                        $post->images()->create(['image_path' => $newPath]);
-                    }
-                }
             }
         }
     }
 
-    private function getTitleForCategory($category, $number): string
+    private function getTitleForCategory($category, $number, $faker): string
     {
         $titles = [
             'Vývojáři' => [
@@ -46,28 +37,37 @@ class PostSeeder extends Seeder
                 'Optimalizace výkonu aplikací',
                 'Bezpečnostní praktiky v kódu',
                 'Moderní architektura aplikací',
-                'Testování a automatizace'
+                'Testování a automatizace',
+                'Jak na efektivní verzování',
+                'Rozdíl mezi Vue a React',
+                'Úvod do Docker kontejnerů'
             ],
             'Grafici' => [
                 'Trendy v designu pro rok 2024',
                 'Práce s barevnými schématy',
                 'UX design v praxi',
                 'Moderní typografie',
-                'Responzivní design'
+                'Responzivní design',
+                'Psychologie barev v reklamě',
+                'Nástroje pro 3D modelování',
+                'Tvorba profesionálního portfolia'
             ],
             'Filmaři' => [
                 'Nové techniky střihu',
                 'Práce se světlem',
                 'Zvuková postprodukce',
                 'Kamerové pohyby',
-                'Barevné korekce'
+                'Barevné korekce',
+                'Výběr správného objektivu',
+                'Tipy pro natáčení venku',
+                'Drony ve filmové produkci'
             ]
         ];
 
-        return $titles[$category][$number - 1];
+        return $titles[$category][$number - 1] ?? $faker->sentence();
     }
 
-    private function getContentForCategory($category): string
+    private function getContentForCategory($category, $faker): string
     {
         $contents = [
             'Vývojáři' => [
@@ -93,7 +93,6 @@ class PostSeeder extends Seeder
             ]
         ];
 
-        return $contents[$category][array_rand($contents[$category])] . "\n\n" .
-               "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+        return $contents[$category][array_rand($contents[$category])] . "\n\n" . $faker->paragraphs(4, true);
     }
-} 
+}
