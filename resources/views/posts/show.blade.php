@@ -33,32 +33,48 @@
 
 
             @if($post->images->isNotEmpty())
-                <!-- Galerie -->
-                <div class="relative" x-data="{ activeSlide: 0, totalSlides: {{ count($post->images) }} }">
+                <!-- Galerie s Lightboxem -->
+                <div class="relative mt-8" 
+                     x-data="{ 
+                         activeSlide: 0, 
+                         totalSlides: {{ count($post->images) }}, 
+                         lightboxOpen: false 
+                     }"
+                     @keydown.escape.window="lightboxOpen = false"
+                     @keydown.right.window="if(lightboxOpen) activeSlide = (activeSlide + 1) % totalSlides"
+                     @keydown.left.window="if(lightboxOpen) activeSlide = (activeSlide - 1 + totalSlides) % totalSlides">
+                     
                     <!-- Hlavní obrázek -->
-                    <div class="relative h-96 mb-4">
+                    <div class="relative h-96 mb-4 cursor-pointer group rounded-lg overflow-hidden" @click="lightboxOpen = true" title="Klikněte pro zvětšení">
                         @foreach($post->images as $index => $image)
                             <div x-show.transition.opacity="activeSlide === {{ $index }}"
                                  class="absolute inset-0">
                                 <img src="{{ asset('storage/' . $image->image_path) }}" 
                                      alt="Obrázek {{ $index + 1 }}"
-                                     class="w-full h-full object-contain">
+                                     class="w-full h-full object-contain bg-gray-100">
                             </div>
                         @endforeach
 
                         <!-- Ovládací prvky -->
-                        <button @click="activeSlide = (activeSlide - 1 + totalSlides) % totalSlides"
-                                class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-r-lg text-white hover:bg-opacity-75">
+                        <button @click.stop="activeSlide = (activeSlide - 1 + totalSlides) % totalSlides"
+                                class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-r-lg text-white hover:bg-opacity-75 z-10">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                             </svg>
                         </button>
-                        <button @click="activeSlide = (activeSlide + 1) % totalSlides"
-                                class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-l-lg text-white hover:bg-opacity-75">
+                        <button @click.stop="activeSlide = (activeSlide + 1) % totalSlides"
+                                class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-l-lg text-white hover:bg-opacity-75 z-10">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
                         </button>
+                        
+                        <!-- Lupa ikonka naznačující kliknutí -->
+                        <div class="absolute bottom-4 right-4 bg-black bg-opacity-60 p-2 rounded-full text-white pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                            </svg>
+                        </div>
                     </div>
 
                     <!-- Náhledy -->
@@ -67,12 +83,58 @@
                             <button @click="activeSlide = {{ $index }}"
                                     :class="{ 'ring-2': activeSlide === {{ $index }} }"
                                     style="ring-color: #fed501;"
-                                    class="rounded-lg overflow-hidden focus:outline-none">
+                                    class="rounded-lg overflow-hidden focus:outline-none bg-gray-100">
                                 <img src="{{ asset('storage/' . $image->image_path) }}" 
                                      alt="Náhled {{ $index + 1 }}"
-                                     class="w-full h-16 object-cover">
+                                     class="w-full h-16 object-cover hover:opacity-75 transition-opacity">
                             </button>
                         @endforeach
+                    </div>
+
+                    <!-- Lightbox Modal -->
+                    <div x-show="lightboxOpen" 
+                         style="display: none;"
+                         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-95 p-4 sm:p-6 backdrop-blur-sm"
+                         x-transition:enter="transition ease-out duration-300"
+                         x-transition:enter-start="opacity-0"
+                         x-transition:enter-end="opacity-100"
+                         x-transition:leave="transition ease-in duration-200"
+                         x-transition:leave-start="opacity-100"
+                         x-transition:leave-end="opacity-0">
+                         
+                        <!-- Zavřít tlačítko -->
+                        <button @click="lightboxOpen = false" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-gray-300 hover:text-white z-50 bg-black bg-opacity-50 p-2 rounded-full">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
+                        <!-- Zvětšený obrázek -->
+                        @foreach($post->images as $index => $image)
+                            <div x-show="activeSlide === {{ $index }}" 
+                                 x-transition:enter="transition ease-out duration-300"
+                                 x-transition:enter-start="opacity-0 transform scale-95"
+                                 x-transition:enter-end="opacity-100 transform scale-100"
+                                 class="relative w-full h-full max-w-7xl flex items-center justify-center">
+                                <img src="{{ asset('storage/' . $image->image_path) }}" 
+                                     @click.stop
+                                     class="max-w-full max-h-full object-contain drop-shadow-2xl rounded-sm">
+                            </div>
+                        @endforeach
+
+                        <!-- Ovládací prvky v lightboxu -->
+                        <button @click.stop="activeSlide = (activeSlide - 1 + totalSlides) % totalSlides"
+                                class="absolute left-2 sm:left-8 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-80 p-3 rounded-full text-white transition z-50">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button @click.stop="activeSlide = (activeSlide + 1) % totalSlides"
+                                class="absolute right-2 sm:right-8 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-80 p-3 rounded-full text-white transition z-50">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             @endif

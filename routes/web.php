@@ -17,6 +17,10 @@ Route::get('/cooperation', function () {
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('posts', AdminPostController::class);
     Route::delete('/images/{image}', [ImageController::class, 'destroy'])->name('images.destroy');
+    
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['show', 'edit', 'update']);
+    Route::get('profile', [\App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
 });
 
 require __DIR__.'/auth.php';

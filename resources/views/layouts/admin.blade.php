@@ -20,12 +20,18 @@
     </header>
     
     <nav class="bg-gray-900 p-4" style="border-bottom: 1px solid #fed501;">
-        <div class="container mx-auto flex space-x-4">
-            <a href="{{ route('home') }}" style="color: #fed501;" class="hover:opacity-75">
+        <div class="container mx-auto flex space-x-6">
+            <a href="{{ route('home') }}" style="color: #fed501;" class="hover:opacity-75 font-medium">
                 Zpět na web
             </a>
-            <a href="{{ route('admin.posts.index') }}" class="text-yellow-600 hover:text-yellow-500">
+            <a href="{{ route('admin.posts.index') }}" class="text-gray-300 hover:text-white transition-colors">
                 Správa příspěvků
+            </a>
+            <a href="{{ route('admin.users.index') }}" class="text-gray-300 hover:text-white transition-colors">
+                Uživatelé
+            </a>
+            <a href="{{ route('admin.profile.edit') }}" class="text-gray-300 hover:text-white transition-colors">
+                Můj profil
             </a>
         </div>
     </nav>
