@@ -92,7 +92,7 @@
             right: 0;
             bottom: 0;
             background-color: rgba(0, 0, 0, 0.5);
-            z-index: 9999; /* Overlay bude pod menu, ale nad obsahem */
+            z-index: 40; /* Overlay bude pod hlavičkou (z-50), ale nad obsahem */
             visibility: hidden;
             opacity: 0;
             transition: visibility 0.3s, opacity 0.3s;
