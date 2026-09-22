@@ -4,14 +4,19 @@
 <div class="bg-gray-50 min-h-screen">
     
     <!-- Prémiová Hero sekce kategorie s interaktivním roztahováním -->
-    <!-- Používáme group, max-h a transition pro plynulý efekt -->
-    <div class="relative bg-white overflow-hidden mb-8 shadow-lg group transition-all duration-700 ease-in-out max-h-[140px] md:max-h-[160px] hover:max-h-[1500px]">
+    <!-- Používáme group, max-h a transition pro plynulý efekt. Přidáno Alpine.js pro mobilní rozbalení na klik. -->
+    <div x-data="{ expanded: false }"
+         @click="expanded = !expanded"
+         class="relative bg-white overflow-hidden mb-8 shadow-lg group transition-all duration-700 ease-in-out cursor-pointer"
+         :class="expanded ? 'max-h-[1500px]' : 'max-h-[140px] md:max-h-[160px] hover:max-h-[1500px]'">
         
         <!-- Fade out efekt (viditelný jen když není hover, naznačuje že text pokračuje) -->
-        <div class="absolute bottom-1 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent opacity-100 group-hover:opacity-0 transition-opacity duration-500 pointer-events-none z-20"></div>
+        <div class="absolute bottom-1 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent transition-opacity duration-500 pointer-events-none z-20"
+             :class="expanded ? 'opacity-0' : 'opacity-100 group-hover:opacity-0'"></div>
         
         <!-- Malá animovaná šipečka indikující možnost rozbalení -->
-        <div class="absolute bottom-3 left-1/2 transform -translate-x-1/2 text-yellow-500 opacity-100 group-hover:opacity-0 transition-opacity duration-500 z-30">
+        <div class="absolute bottom-3 left-1/2 transform -translate-x-1/2 text-yellow-500 transition-opacity duration-500 z-30"
+             :class="expanded ? 'opacity-0' : 'opacity-100 group-hover:opacity-0'">
             <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
@@ -34,8 +39,9 @@
                 {{ $category->name }}
             </h1>
             
-            <!-- Popis kategorie s elegantním formátováním (odhalí se na hover) -->
-            <div class="text-base md:text-lg text-black leading-relaxed font-light space-y-3 w-full max-w-5xl mx-auto pb-4 opacity-40 group-hover:opacity-100 transition-opacity duration-700">
+            <!-- Popis kategorie s elegantním formátováním (odhalí se na hover nebo klik na mobilu) -->
+            <div class="text-base md:text-lg text-black leading-relaxed font-light space-y-3 w-full max-w-5xl mx-auto pb-4 transition-opacity duration-700"
+                 :class="expanded ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'">
                 @foreach(explode("\n", $category->description) as $paragraph)
                     @if(trim($paragraph))
                         <p>
