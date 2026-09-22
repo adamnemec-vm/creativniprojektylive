@@ -84,25 +84,8 @@
             list-style-type: square !important;
         }
 
-        /* Overlay pro zakrytí obsahu při otevřeném menu */
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 40; /* Overlay bude pod hlavičkou (z-50), ale nad obsahem */
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.3s, opacity 0.3s;
-        }
-
-        #overlay.active {
-            visibility: visible;
-            opacity: 0.5;
-            pointer-events: auto;
-        }
+        /* Overlay byl odstraněn, protože překrýval mobilní menu a způsoboval ztmavení.
+           Hlavička samotná po rozbalení pokryje celou obrazovku, takže overlay není potřeba. */
 
         /* Skrytí obsahu při otevřeném menu */
         body.menu-open {
@@ -142,11 +125,6 @@
         /* Odkazy v menu jsou vždy viditelné a klikatelné */
         #mobile-menu a {
             z-index: 10001;
-        }
-
-        /* Zabráníme kliknutí na overlay, aby neinterferovalo s klikáním na menu */
-        #overlay.active {
-            pointer-events: none; /* Zamezí interakci s overlay */
         }
 
         /* Oprava pro ikonu X */
@@ -290,8 +268,7 @@
         @yield('content')
     </main>
 
-    <!-- Overlay pro zašednutí obsahu -->
-    <div id="overlay"></div>
+    <!-- Overlay odstraněn -->
 
     <footer class="bg-gray-900 border-t border-yellow-600 py-6">
         <div class="container mx-auto px-4 text-center text-gray-400">
@@ -335,7 +312,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             const burgerMenu = document.getElementById('burger-menu');
             const mobileMenu = document.getElementById('mobile-menu');
-            const overlay = document.getElementById('overlay');
             const pageContent = document.getElementById('page-content');
             const burgerIcon = burgerMenu.querySelector('.burger-icon');
             let menuOpen = false;
@@ -345,13 +321,11 @@
                 requestAnimationFrame(() => {
                     if (menuOpen) {
                         mobileMenu.classList.add('active');
-                        overlay.classList.add('active');
                         document.body.classList.add('menu-open');
                         document.getElementById('main-header').classList.add('active');
                         burgerIcon.classList.add('x');
                     } else {
                         mobileMenu.classList.remove('active');
-                        overlay.classList.remove('active');
                         document.body.classList.remove('menu-open');
                         document.getElementById('main-header').classList.remove('active');
                         burgerIcon.classList.remove('x');
@@ -360,7 +334,6 @@
             };
 
             burgerMenu.addEventListener('click', toggleMobileMenu);
-            overlay.addEventListener('click', toggleMobileMenu);
         });
     </script>
 </body>
