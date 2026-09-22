@@ -88,7 +88,7 @@
                         <div class="p-6 flex-grow flex flex-col">
                             <h2 class="text-xl font-bold mb-2" style="color: #fed501;">{{ $post->title }}</h2>
                             <p class="text-gray-600 mb-4 flex-grow">
-                                {!! Str::limit(strip_tags($post->content), 100) !!}
+                                {!! Str::limit(html_entity_decode(strip_tags($post->content), ENT_QUOTES, 'UTF-8'), 100) !!}
                             </p>
                             <div class="flex justify-end mt-auto">
                                 <span class="px-4 py-2 rounded-lg transition-colors inline-flex items-center"
