@@ -21,3 +21,9 @@ yarn-error.log
 /.vscode
 /.zed
 /creativniprojekty
+/composer.phar
+/database.sql
+/.git.tar.gz
+/c
+/public/info.php
+/public/test.php
