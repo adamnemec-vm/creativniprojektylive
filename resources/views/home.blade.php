@@ -96,14 +96,14 @@
 
         <!-- Obsah -->
         <div class="container mx-auto px-4 pt-16 pb-16">
-            <form method="GET" action="{{ route('home') }}#prispevky" class="max-w-xl mx-auto mb-10 flex gap-2" role="search">
+            <form method="GET" action="{{ route('home') }}#prispevky" class="max-w-xs mb-6 flex gap-2 text-sm" role="search">
                 <label for="q" class="sr-only">Hledat v příspěvcích</label>
                 <input type="search" name="q" id="q" value="{{ $search }}"
                        placeholder="Hledat v příspěvcích…"
-                       class="flex-1 px-4 py-2 rounded-lg border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand">
-                <button type="submit" class="px-5 py-2 rounded-lg bg-brand text-black font-medium">Hledat</button>
+                       class="flex-1 min-w-0 px-3 py-1.5 rounded-md border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand">
+                <button type="submit" class="px-3 py-1.5 rounded-md bg-brand text-black font-medium">Hledat</button>
                 @if($search !== '')
-                    <a href="{{ route('home') }}#prispevky" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white">Zrušit</a>
+                    <a href="{{ route('home') }}#prispevky" class="px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 bg-white">Zrušit</a>
                 @endif
             </form>
 
