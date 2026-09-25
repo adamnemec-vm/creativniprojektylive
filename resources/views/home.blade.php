@@ -96,7 +96,7 @@
 
         <!-- Obsah -->
         <div class="container mx-auto px-4 pt-16 pb-16">
-            <form method="GET" action="{{ route('home') }}#prispevky" class="max-w-xs mb-6 flex gap-2 text-sm" role="search">
+            <form method="GET" action="{{ route('home') }}#prispevky" class="max-w-xs ml-auto mb-6 flex gap-2 text-sm" role="search">
                 <label for="q" class="sr-only">Hledat v příspěvcích</label>
                 <input type="search" name="q" id="q" value="{{ $search }}"
                        placeholder="Hledat v příspěvcích…"
