@@ -1,66 +1,114 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Projekty CHC
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Web s projekty studentů Creative Hill College (vývojáři, grafici, filmaři) s administrací pro správu příspěvků, kategorií a uživatelů.
 
-## About Laravel
+Postaveno na Laravelu 11, Tailwindu, Alpine.js a TinyMCE.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Role v administraci
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| | Editor | Administrátor |
+|---|---|---|
+| Vytvářet příspěvky | ano | ano |
+| Upravovat, publikovat a mazat příspěvky | jen svoje | všechny |
+| Spravovat kategorie | ne | ano |
+| Spravovat uživatele | ne | ano |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Příspěvek může být **koncept** (neveřejný), **publikovaný**, nebo **naplánovaný** (zveřejní se v zadaném čase). Koncepty si autor i administrátor mohou prohlédnout přes odkaz „Náhled“.
 
-## Learning Laravel
+## Lokální spuštění
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Požadavky: PHP 8.2 s rozšířeními `gd`, `pdo_sqlite` (nebo `pdo_mysql`), Composer, Node.js.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan db:seed --class=CategorySeeder
+php artisan storage:link
+php artisan app:create-admin
+php artisan serve
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Lokálně se používá SQLite (`DB_CONNECTION=sqlite`, databáze v `database/database.sqlite`), produkce běží na MySQL.
 
-## Laravel Sponsors
+## Frontend
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+npm run dev     # vývoj s automatickým obnovováním
+npm run build   # produkční build do public/build (je součástí repozitáře)
+```
 
-### Premium Partners
+Po změně šablon nebo JS je potřeba spustit `npm run build` a výsledek commitnout.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Testy
 
-## Contributing
+```bash
+php artisan test
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Testy běží nad SQLite v paměti a lokální databáze se jich nedotkne.
 
-## Code of Conduct
+## Nasazení na produkci
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Běžné nasazení:
 
-## Security Vulnerabilities
+```bash
+php artisan down
+git pull
+composer install --no-dev --optimize-autoloader
+php artisan migrate --force
+php artisan optimize:clear && php artisan optimize
+php artisan up
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### První nasazení po přepsání historie (září 2026)
 
-## License
+Historie repozitáře byla 24. 9. 2026 přepsána (odstranění citlivých souborů), takže na serveru `git pull` nepůjde. Postup:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. **Záloha** (bez ní nepokračovat):
+   ```bash
+   mysqldump -u UZIVATEL -p NAZEV_DB > zaloha-$(date +%F).sql
+   tar czf uploady-$(date +%F).tar.gz storage/app/public
+   git rev-parse HEAD > puvodni-commit.txt
+   ```
+2. **Kontrola serveru**: `git status` musí být čistý. Jestli ukáže upravené soubory, někdo měnil kód přímo na serveru; ty změny si nejdřív ulož.
+3. **Náhled migrací bez spuštění**:
+   ```bash
+   php artisan migrate:status
+   php artisan migrate --pretend   # vypíše SQL, nic nezmění
+   ```
+   Čekají jen tři migrace z 25. 9. 2026. Pokud čeká i `add_slug_to_posts_table`, nebyla dřív nasazena. Poběží spolu s nimi.
+4. **Nasazení**:
+   ```bash
+   php artisan down
+   git fetch origin
+   git reset --hard origin/master
+   composer install --no-dev --optimize-autoloader
+   php artisan migrate --force
+   php artisan optimize:clear && php artisan optimize
+   php artisan up
+   ```
+   `reset --hard` smaže ze serveru soubory, které z repozitáře zmizely (`composer.phar`, `public/info.php`, `public/test.php`, `database.sql`, `creativniprojekty`, `c/`). `.env`, `vendor/` a nahrané obrázky se nemění. Pokud jsi na serveru spouštěl Composer přes `composer.phar`, stáhni ho znovu nebo použij globální `composer`.
+5. **Kontrola**: homepage, detail příspěvku s galerií, přihlášení a administrace. Počet příspěvků by měl odpovídat stavu před nasazením. Podpora WebP: `php -r "var_dump((bool) (imagetypes() & IMG_WEBP));"`. Bez ní se obrázky ukládají v originále.
+6. **Heslo**: pokud má účet `admin` pořád heslo `admin`, hned ho změň v Můj profil.
+
+**Návrat zpět**, kdyby něco nefungovalo:
+
+```bash
+php artisan down
+php artisan migrate:rollback --step=3 --force
+git reset --hard $(cat puvodni-commit.txt)
+composer install --no-dev --optimize-autoloader
+php artisan optimize:clear
+php artisan up
+```
+
+Kdyby nefungoval ani rollback, obnov databázi ze zálohy (`mysql -u UZIVATEL -p NAZEV_DB < zaloha-….sql`).
+
+Co nasazení dělá s existujícími daty:
+
+- Všichni stávající uživatelé dostanou roli administrátor. Stávající příspěvky dostanou datum publikace podle data vytvoření, zůstanou tedy veřejné. Žádná data se nemažou.
+- Stávající obrázky zůstávají, jak jsou. Zmenšují se a do WebP převádějí jen nově nahrané (galerie max. 1920 px, náhled max. 1200 px, GIFy beze změny).
+- Obsah příspěvků se čistí (HTMLPurifier) až při dalším uložení. Vložená videa jsou povolena jen z YouTube a Vimea, jiné vložené prvky (např. mapy) se při uložení odstraní.

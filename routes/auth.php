@@ -7,7 +7,8 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    // Pojistka navíc k limitu v controlleru: omezí i pokusy s různými jmény z jedné IP.
+    Route::post('login', [AuthenticatedSessionController::class, 'store'])->middleware('throttle:20,1');
 });
 
 Route::middleware('auth')->group(function () {

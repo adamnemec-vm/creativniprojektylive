@@ -4,15 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Image;
-use Illuminate\Support\Facades\Storage;
+use App\Services\ImageStorage;
+use Illuminate\Support\Facades\Gate;
 
 class ImageController extends Controller
 {
-    public function destroy(Image $image)
+    public function destroy(Image $image, ImageStorage $images)
     {
-        Storage::disk('public')->delete($image->image_path);
+        Gate::authorize('update', $image->post);
+
         $image->delete();
-        
-        return back()->with('success', 'Obrázek byl úspěšně smazán.');
+        $images->delete($image->image_path);
+
+        return request()->expectsJson()
+            ? response()->noContent()
+            : back()->with('success', 'Obrázek byl úspěšně smazán.');
     }
-} 
+}

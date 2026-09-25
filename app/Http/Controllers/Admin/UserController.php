@@ -5,71 +5,78 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $users = User::latest()->paginate(15);
-        
+        $users = User::withCount('posts')->orderBy('name')->paginate(15);
+
         return view('admin.users.index', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('admin.users.create');
+        return view('admin.users.form', ['user' => new User(['role' => User::ROLE_EDITOR])]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:'.User::class],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        User::create($this->validated($request));
 
         return redirect()->route('admin.users.index')->with('success', 'Uživatel byl úspěšně vytvořen.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
+    public function edit(User $user)
     {
-        // Ochrana hlavního administrátora
-        if ($user->username === 'admin' || $user->id === 1) {
-             return redirect()->route('admin.users.index')->withErrors(['Hlavního administrátora nelze smazat.']);
+        return view('admin.users.form', compact('user'));
+    }
+
+    public function update(Request $request, User $user)
+    {
+        $data = $this->validated($request, $user);
+
+        // Přihlášený admin si nesmí sebrat práva – tím je zaručeno, že vždy zůstane aspoň jeden admin.
+        if ($data['role'] !== $user->role && $user->is($request->user())) {
+            return back()->withInput()->withErrors(['role' => 'Nemůžete změnit roli vlastnímu účtu.']);
         }
 
-        if (User::count() <= 1) {
-            return redirect()->route('admin.users.index')->withErrors(['Posledního uživatele nelze smazat.']);
+        if (blank($data['password'] ?? null)) {
+            unset($data['password']);
         }
-        
-        if (auth()->id() === $user->id) {
-             return redirect()->route('admin.users.index')->withErrors(['Nemůžete smazat vlastní účet.']);
+
+        $user->update($data);
+
+        return redirect()->route('admin.users.index')->with('success', 'Uživatel byl upraven.');
+    }
+
+    public function destroy(Request $request, User $user)
+    {
+        if ($user->is($request->user())) {
+            return back()->withErrors(['Nemůžete smazat vlastní účet.']);
         }
 
         $user->delete();
 
         return redirect()->route('admin.users.index')->with('success', 'Uživatel byl úspěšně smazán.');
+    }
+
+    private function validated(Request $request, ?User $user = null): array
+    {
+        return $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user?->id)],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')->ignore($user?->id)],
+            'role' => ['required', Rule::in(array_keys(User::ROLES))],
+            'password' => [$user ? 'nullable' : 'required', 'confirmed', Password::defaults()],
+        ], [], [
+            'name' => 'jméno',
+            'username' => 'uživatelské jméno',
+            'email' => 'e-mail',
+            'role' => 'role',
+            'password' => 'heslo',
+        ]);
     }
 }

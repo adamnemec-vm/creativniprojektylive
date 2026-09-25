@@ -3,9 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projekty CHC</title>
+    <title>@hasSection('title')@yield('title') | Projekty CHC @else Projekty CHC @endif</title>
+    <meta name="description" content="@yield('description', 'Projekty studentů Creative Hill College – vývoj, grafika a film.')">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta property="og:site_name" content="Projekty CHC">
+    <meta property="og:locale" content="cs_CZ">
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:title" content="@hasSection('title')@yield('title')@else Projekty CHC @endif">
+    <meta property="og:description" content="@yield('description', 'Projekty studentů Creative Hill College – vývoj, grafika a film.')">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="@yield('og_image', asset('images/defaults/Logo.png'))">
+    <meta name="twitter:card" content="summary_large_image">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -185,11 +194,10 @@
     </style>
 </head>
 <body class="min-h-screen bg-gray-100">
-    <header class="fixed top-0 left-0 right-0 z-50 overflow-hidden transition-all duration-300"
-            id="main-header"
-            style="background-color: #fed501; border-bottom: 1px solid white;">
-        <div class="absolute inset-0 z-0" 
-             style="background-color: #fed501; clip-path: polygon(0 0, 100% 0, 100% 60%, 0 100%);">
+    <header class="fixed top-0 left-0 right-0 z-50 overflow-hidden transition-all duration-300 bg-brand border-b border-white"
+            id="main-header">
+        <div class="absolute inset-0 z-0 bg-brand"
+             style="clip-path: polygon(0 0, 100% 0, 100% 60%, 0 100%);">
         </div>
         
         <div class="relative z-10 container mx-auto px-4">
@@ -201,7 +209,7 @@
                     </a>
 
                     <div class="hidden md:flex items-center justify-center space-x-8 md:w-2/4">
-                        @foreach(\App\Models\Category::all() as $category)
+                        @foreach($navCategories as $category)
                             <a href="{{ route('categories.show', $category) }}" 
                                class="text-black hover:text-gray-800 text-lg font-bold">
                                 {{ $category->name }}
@@ -239,7 +247,7 @@
                 <!-- Mobilní menu -->
                 <div id="mobile-menu" class="md:hidden fixed inset-0 transform transition-transform duration-300 ease-in-out z-50" style="background-color: #fed501; top: 0; -webkit-overflow-scrolling: touch;">
                     <div class="flex flex-col space-y-4 p-4 pt-20 min-h-screen w-full">
-                        @foreach(\App\Models\Category::all() as $category)
+                        @foreach($navCategories as $category)
                             <a href="{{ route('categories.show', $category) }}" 
                                class="text-black hover:text-gray-800 px-4 text-lg font-bold text-center">
                                 {{ $category->name }}

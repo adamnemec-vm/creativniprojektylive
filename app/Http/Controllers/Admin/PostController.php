@@ -3,140 +3,180 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
-use App\Models\Post;
+use App\Http\Requests\PostRequest;
 use App\Models\Category;
+use App\Models\Post;
+use App\Services\HtmlSanitizer;
+use App\Services\ImageStorage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Gate;
+use Throwable;
 
 class PostController extends Controller
 {
+    public function __construct(
+        private ImageStorage $images,
+        private HtmlSanitizer $sanitizer,
+    )
+    {
+    }
+
     public function index(Request $request)
     {
-        $query = Post::with('category')->select('posts.*');
+        $query = Post::with(['category', 'author'])->select('posts.*');
+
+        if (! $request->user()->isAdmin()) {
+            $query->where('posts.user_id', $request->user()->id);
+        }
 
         if ($request->filled('search')) {
-            $query->where('posts.title', 'like', '%' . $request->search . '%');
+            $query->where('posts.title', 'like', '%'.$request->search.'%');
         }
 
-        if ($request->filled('sort_by')) {
-            $direction = $request->input('sort_direction', 'asc') === 'desc' ? 'desc' : 'asc';
-            
-            if ($request->sort_by === 'category') {
-                $query->join('categories', 'posts.category_id', '=', 'categories.id')
-                      ->orderBy('categories.name', $direction);
-            } elseif (in_array($request->sort_by, ['title', 'created_at'])) {
-                $query->orderBy('posts.' . $request->sort_by, $direction);
-            }
-        } else {
-            $query->latest('posts.created_at');
+        if ($request->filled('status')) {
+            match ($request->status) {
+                'published' => $query->published(),
+                'scheduled' => $query->where('posts.published_at', '>', now()),
+                'draft' => $query->whereNull('posts.published_at'),
+                default => null,
+            };
         }
 
-        $posts = $query->paginate(15)->appends($request->all());
+        $direction = $request->input('sort_direction') === 'asc' ? 'asc' : 'desc';
+
+        match ($request->input('sort_by')) {
+            'category' => $query->join('categories', 'posts.category_id', '=', 'categories.id')
+                ->orderBy('categories.name', $direction),
+            'title' => $query->orderBy('posts.title', $direction),
+            default => $query->orderBy('posts.created_at', $direction),
+        };
+
+        $posts = $query->paginate(15)->withQueryString();
 
         return view('admin.posts.index', compact('posts'));
     }
 
     public function create()
     {
-        $categories = Category::all();
-        return view('admin.posts.create', compact('categories'));
+        return view('admin.posts.create', [
+            'post' => new Post,
+            'categories' => Category::orderBy('name')->get(),
+        ]);
     }
 
-    public function store(StorePostRequest $request)
+    public function store(PostRequest $request)
     {
-        $validated = $request->validated();
+        $data = $request->validated();
 
-        DB::transaction(function () use ($validated, $request) {
-            $post = Post::create([
-                'title' => $validated['title'],
-                'content' => $validated['content'],
-                'category_id' => $validated['category_id'],
-                'slug' => Str::slug($validated['title'])
-            ]);
+        $this->withUploadCleanup(function (array &$stored) use ($request, $data) {
+            DB::transaction(function () use ($request, $data, &$stored) {
+                $post = Post::create([
+                    'title' => $data['title'],
+                    'slug' => Post::uniqueSlug($data['slug'] ?? $data['title']),
+                    'content' => $this->sanitizer->clean($data['content']),
+                    'category_id' => $data['category_id'],
+                    'user_id' => $request->user()->id,
+                    'published_at' => $request->publishedAt(),
+                ]);
 
-            if ($request->hasFile('thumbnail')) {
-                $path = $request->file('thumbnail')->store('posts/thumbnails', 'public');
-                $post->update(['thumbnail_path' => $path]);
-            }
-
-            if ($request->hasFile('images')) {
-                $imagesData = [];
-                foreach ($request->file('images') as $image) {
-                    $path = $image->store('posts', 'public');
-                    $imagesData[] = [
-                        'image_path' => $path,
-                        'post_id' => $post->id,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ];
-                }
-                \App\Models\Image::insert($imagesData);
-            }
+                $this->storeUploads($request, $post, $stored);
+            });
         });
 
-        return redirect()->route('admin.posts.index')
-            ->with('success', 'Příspěvek byl úspěšně vytvořen.');
+        return redirect()->route('admin.posts.index')->with('success', 'Příspěvek byl úspěšně vytvořen.');
     }
 
     public function edit(Post $post)
     {
-        $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        Gate::authorize('update', $post);
+
+        return view('admin.posts.edit', [
+            'post' => $post->load('images'),
+            'categories' => Category::orderBy('name')->get(),
+        ]);
     }
 
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
-        $validated = $request->validated();
+        Gate::authorize('update', $post);
 
-        DB::transaction(function () use ($validated, $request, $post) {
-            $post->update([
-                'title' => $validated['title'],
-                'content' => $validated['content'],
-                'category_id' => $validated['category_id'],
-                'slug' => Str::slug($validated['title'])
-            ]);
+        $data = $request->validated();
+        $oldThumbnail = $post->thumbnail_path;
 
-            if ($request->hasFile('thumbnail')) {
-                if ($post->thumbnail_path) {
-                    Storage::disk('public')->delete($post->thumbnail_path);
-                }
-                $path = $request->file('thumbnail')->store('posts/thumbnails', 'public');
-                $post->update(['thumbnail_path' => $path]);
-            }
+        $this->withUploadCleanup(function (array &$stored) use ($request, $data, $post) {
+            DB::transaction(function () use ($request, $data, $post, &$stored) {
+                $post->update([
+                    'title' => $data['title'],
+                    // Adresa se mění jen výslovně, jinak by přestaly fungovat sdílené odkazy.
+                    'slug' => filled($data['slug'] ?? null) ? $data['slug'] : $post->slug,
+                    'content' => $this->sanitizer->clean($data['content']),
+                    'category_id' => $data['category_id'],
+                    'published_at' => $request->publishedAt($post),
+                ]);
 
-            if ($request->hasFile('images')) {
-                $imagesData = [];
-                foreach ($request->file('images') as $image) {
-                    $path = $image->store('posts', 'public');
-                    $imagesData[] = [
-                        'image_path' => $path,
-                        'post_id' => $post->id,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ];
-                }
-                \App\Models\Image::insert($imagesData);
-            }
+                $this->updateGalleryMeta($post, $data);
+                $this->storeUploads($request, $post, $stored);
+            });
         });
+
+        if ($request->hasFile('thumbnail') && $oldThumbnail) {
+            $this->images->delete($oldThumbnail);
+        }
 
         return redirect()->route('admin.posts.index')->with('success', 'Příspěvek byl úspěšně upraven.');
     }
 
     public function destroy(Post $post)
     {
-        if ($post->thumbnail_path) {
-            Storage::disk('public')->delete($post->thumbnail_path);
-        }
-        
-        foreach ($post->images as $image) {
-            Storage::disk('public')->delete($image->image_path);
-        }
-        
+        Gate::authorize('delete', $post);
+
+        $paths = $post->images->pluck('image_path')->push($post->thumbnail_path);
+
         $post->delete();
+        $paths->each(fn ($path) => $this->images->delete($path));
+
         return redirect()->route('admin.posts.index')->with('success', 'Příspěvek byl úspěšně smazán.');
+    }
+
+    private function storeUploads(PostRequest $request, Post $post, array &$stored): void
+    {
+        if ($request->hasFile('thumbnail')) {
+            $stored[] = $path = $this->images->store($request->file('thumbnail'), 'posts/thumbnails', ImageStorage::THUMBNAIL_MAX);
+            $post->update(['thumbnail_path' => $path]);
+        }
+
+        $nextOrder = (int) $post->images()->max('sort_order') + 1;
+
+        foreach ($request->file('images', []) as $file) {
+            $stored[] = $path = $this->images->store($file, 'posts', ImageStorage::GALLERY_MAX);
+            $post->images()->create(['image_path' => $path, 'sort_order' => $nextOrder++]);
+        }
+    }
+
+    private function updateGalleryMeta(Post $post, array $data): void
+    {
+        $order = array_flip(array_map('intval', $data['image_order'] ?? []));
+        $alts = $data['image_alt'] ?? [];
+
+        foreach ($post->images as $image) {
+            $image->update([
+                'sort_order' => $order[$image->id] ?? $image->sort_order,
+                'alt' => array_key_exists($image->id, $alts) ? $alts[$image->id] : $image->alt,
+            ]);
+        }
+    }
+
+    /** Když uložení do DB selže, smaže soubory, které se mezitím nahrály. */
+    private function withUploadCleanup(callable $callback): void
+    {
+        $stored = [];
+
+        try {
+            $callback($stored);
+        } catch (Throwable $e) {
+            array_walk($stored, fn ($path) => $this->images->delete($path));
+            throw $e;
+        }
     }
 }

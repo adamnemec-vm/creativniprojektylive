@@ -8,7 +8,12 @@ class CategoryController extends Controller
 {
     public function show(Category $category)
     {
-        $posts = $category->posts()->latest()->paginate(9);
+        $posts = $category->posts()
+            ->published()
+            ->with(['category', 'images'])
+            ->latest('published_at')
+            ->paginate(9);
+
         return view('categories.show', compact('category', 'posts'));
     }
-} 
+}

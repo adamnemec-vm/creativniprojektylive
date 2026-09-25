@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('title', 'Spolupráce')
+@section('description', 'Spolupracujte se studenty Creative Hill College – reklamní spoty, vizuální identita, weby a aplikace na míru.')
+
 @section('content')
 <div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4">

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold" style="color: #fed501;">Můj profil</h2>
+        <h2 class="text-2xl font-bold text-brand">Můj profil</h2>
     </div>
 
     <div class="bg-gray-900 rounded-lg shadow-lg p-6 max-w-2xl">
@@ -40,8 +40,7 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="px-6 py-2 rounded-lg font-medium transition-colors"
-                        style="background-color: #fed501; color: black;">
+                <button type="submit" class="px-6 py-2 rounded-lg font-medium transition-colors bg-brand text-black">
                     Změnit heslo
                 </button>
             </div>

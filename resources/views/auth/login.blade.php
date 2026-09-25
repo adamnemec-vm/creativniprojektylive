@@ -1,9 +1,11 @@
 @extends('layouts.app')
 
+@section('title', 'Přihlášení')
+
 @section('content')
 <div class="max-w-md mx-auto">
     <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold mb-6" style="color: #fed501;">Přihlášení</h2>
+        <h2 class="text-2xl font-bold mb-6 text-brand">Přihlášení</h2>
 
         @if ($errors->any())
         <div class="bg-red-500 text-white p-4 rounded-lg mb-6">
@@ -19,10 +21,9 @@
             @csrf
 
             <div class="mb-4">
-                <label for="username" style="color: #fed501;" class="block mb-2">Uživatelské jméno</label>
-                <input type="text" name="username" id="username" required
-                    class="w-full px-3 py-2 bg-gray-800 rounded-lg text-white focus:outline-none"
-                    style="border: 1px solid #fed501; border-color: #fed501;">
+                <label for="username" class="block mb-2 text-brand">Uživatelské jméno</label>
+                <input type="text" name="username" id="username" value="{{ old('username') }}" required autofocus autocomplete="username"
+                    class="w-full px-3 py-2 bg-gray-800 rounded-lg text-white focus:outline-none border border-brand">
             </div>
 
             <div class="mb-6">
@@ -32,8 +33,7 @@
             </div>
 
             <button type="submit" 
-                class="w-full py-2 px-4 rounded-lg transition-colors"
-                style="background-color: #fed501; color: black;">
+                class="w-full py-2 px-4 rounded-lg transition-colors bg-brand text-black">
                 Přihlásit se
             </button>
         </form>

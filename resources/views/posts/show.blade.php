@@ -1,14 +1,28 @@
 @extends('layouts.app')
 
+@php($cover = $post->coverImagePath())
+
+@section('title', $post->title)
+@section('description', $post->excerpt(160))
+@section('og_type', 'article')
+@section('og_image', $cover ? asset('storage/'.$cover) : asset('images/defaults/default.jpg'))
+
 @section('content')
 <div class="bg-gray-100 min-h-screen py-8">
     <div class="max-w-4xl mx-auto px-4">
+        @unless($post->isPublished())
+            <div class="mb-4 rounded-lg bg-black text-brand px-4 py-3 text-sm">
+                Náhled – příspěvek není veřejný ({{ mb_strtolower($post->statusLabel()) }}{{ $post->isScheduled() ? ' na '.$post->published_at->format('d.m.Y H:i') : '' }}).
+                <a href="{{ route('admin.posts.edit', $post) }}" class="underline ml-2">Upravit</a>
+            </div>
+        @endunless
+
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
 
             <!-- Hlavička příspěvku -->
             <div class="p-6 flex justify-between items-start gap-6 bg-gray-50 border-b">
                 <div class="flex-1">
-                    <h1 class="text-2xl font-bold mb-3" style="color: #fed501;">{{ $post->title }}</h1>
+                    <h1 class="text-2xl font-bold mb-3 text-brand">{{ $post->title }}</h1>
                     <div class="flex items-center gap-4 text-gray-600 text-sm mb-2">
                         <span>{{ $post->created_at->format('d.m.Y') }}</span>
                         <span>{{ $post->category->name }}</span>
@@ -49,8 +63,9 @@
                         @foreach($post->images as $index => $image)
                             <div x-show.transition.opacity="activeSlide === {{ $index }}"
                                  class="absolute inset-0">
-                                <img src="{{ asset('storage/' . $image->image_path) }}" 
-                                     alt="Obrázek {{ $index + 1 }}"
+                                <img src="{{ asset('storage/' . $image->image_path) }}"
+                                     alt="{{ $image->alt ?: $post->title.' – obrázek '.($index + 1) }}"
+                                     @if($index > 0) loading="lazy" @endif
                                      class="w-full h-full object-contain bg-gray-100">
                             </div>
                         @endforeach
@@ -82,10 +97,10 @@
                         @foreach($post->images as $index => $image)
                             <button @click="activeSlide = {{ $index }}"
                                     :class="{ 'ring-2': activeSlide === {{ $index }} }"
-                                    style="ring-color: #fed501;"
-                                    class="rounded-lg overflow-hidden focus:outline-none bg-gray-100">
-                                <img src="{{ asset('storage/' . $image->image_path) }}" 
-                                     alt="Náhled {{ $index + 1 }}"
+                                    aria-label="Zobrazit obrázek {{ $index + 1 }}"
+                                    class="rounded-lg overflow-hidden focus:outline-none bg-gray-100 ring-brand">
+                                <img src="{{ asset('storage/' . $image->image_path) }}"
+                                     alt="" loading="lazy"
                                      class="w-full h-16 object-cover hover:opacity-75 transition-opacity">
                             </button>
                         @endforeach
@@ -116,7 +131,9 @@
                                  x-transition:enter-start="opacity-0 transform scale-95"
                                  x-transition:enter-end="opacity-100 transform scale-100"
                                  class="relative w-full h-full max-w-7xl flex items-center justify-center">
-                                <img src="{{ asset('storage/' . $image->image_path) }}" 
+                                <img src="{{ asset('storage/' . $image->image_path) }}"
+                                     alt="{{ $image->alt ?: $post->title.' – obrázek '.($index + 1) }}"
+                                     loading="lazy"
                                      @click.stop
                                      class="max-w-full max-h-full object-contain drop-shadow-2xl rounded-sm">
                             </div>
@@ -142,9 +159,8 @@
             <div class="p-6">
 
                 <div class="mt-6">
-                    <a href="{{ url()->previous() }}" 
-                       class="px-4 py-2 rounded-lg transition-colors"
-                       style="background-color: #fed501; color: black;">
+                    <a href="{{ url()->previous() }}"
+                       class="px-4 py-2 rounded-lg transition-colors bg-brand text-black">
                         Zpět
                     </a>
                 </div>
@@ -152,8 +168,4 @@
         </div>
     </div>
 </div>
-
-@push('scripts')
-<script src="//unpkg.com/alpinejs" defer></script>
-@endpush
 @endsection

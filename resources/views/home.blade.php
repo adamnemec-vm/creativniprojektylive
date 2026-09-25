@@ -11,19 +11,18 @@
                         <p class="text-xl text-gray-600 text-center mb-4">
                             Projekty Creative Hill College
                         </p>
-                        <h2 class="text-4xl md:text-5xl font-extrabold mb-16 text-center font-display" style="color: #fed501;">
+                        <h2 class="text-4xl md:text-5xl font-extrabold mb-16 text-center font-display text-brand">
                             Naše zaměření
                         </h2>
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
                             <div class="group h-full">
-                                <div class="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl transform group-hover:-translate-y-2 transition-all duration-300 border-t-4 h-full flex flex-col" 
-                                     style="border-color: #fed501;">
+                                <div class="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl transform group-hover:-translate-y-2 transition-all duration-300 border-t-4 h-full flex flex-col border-brand">
                                     <div class="flex items-center mb-6">
-                                        <svg class="w-8 h-8 mr-3 flex-shrink-0" style="color: #fed501;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-8 h-8 mr-3 flex-shrink-0 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
                                         </svg>
-                                        <h3 class="text-2xl font-bold" style="color: #fed501;">Vývojáři</h3>
+                                        <h3 class="text-2xl font-bold text-brand">Vývojáři</h3>
                                     </div>
                                     <p class="leading-relaxed text-black flex-grow">
                                         Naši vývojáři se zaměřují na tvorbu moderních webových a mobilních aplikací s důrazem na efektivitu, bezpečnost a skvělý uživatelský zážitek. Využíváme nejnovější technologie a dbáme na čistý, kvalitní kód.
@@ -32,13 +31,12 @@
                             </div>
 
                             <div class="group h-full">
-                                <div class="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl transform group-hover:-translate-y-2 transition-all duration-300 border-t-4 h-full flex flex-col" 
-                                     style="border-color: #fed501;">
+                                <div class="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl transform group-hover:-translate-y-2 transition-all duration-300 border-t-4 h-full flex flex-col border-brand">
                                     <div class="flex items-center mb-6">
-                                        <svg class="w-8 h-8 mr-3 flex-shrink-0" style="color: #fed501;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-8 h-8 mr-3 flex-shrink-0 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
-                                        <h3 class="text-2xl font-bold" style="color: #fed501;">Grafici</h3>
+                                        <h3 class="text-2xl font-bold text-brand">Grafici</h3>
                                     </div>
                                     <p class="leading-relaxed text-black flex-grow">
                                         Náš grafický tým tvoří originální vizuální identity a designová řešení – od loga a webdesignu až po komplexní branding. Spojujeme kreativitu s funkčností, aby každý projekt vynikl a oslovil cílovou skupinu.
@@ -47,13 +45,12 @@
                             </div>
 
                             <div class="group h-full">
-                                <div class="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl transform group-hover:-translate-y-2 transition-all duration-300 border-t-4 h-full flex flex-col" 
-                                     style="border-color: #fed501;">
+                                <div class="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl transform group-hover:-translate-y-2 transition-all duration-300 border-t-4 h-full flex flex-col border-brand">
                                     <div class="flex items-center mb-6">
-                                        <svg class="w-8 h-8 mr-3 flex-shrink-0" style="color: #fed501;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-8 h-8 mr-3 flex-shrink-0 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                                         </svg>
-                                        <h3 class="text-2xl font-bold" style="color: #fed501;">Filmaři</h3>
+                                        <h3 class="text-2xl font-bold text-brand">Filmaři</h3>
                                     </div>
                                     <p class="leading-relaxed text-black flex-grow">
                                         Vyprávíme příběhy prostřednictvím obrazu a zvuku. Dokážeme stvořit reklamní spot, dokumentární snímek či třeba krátký film o vaší firmě. Naši mladí filmaři jsou plní neotřelých nápadů.
@@ -89,66 +86,35 @@
     </div>
 
     <!-- Sekce s příspěvky -->
-    <div class="relative bg-gray-100">
+    <div class="relative bg-gray-100" id="prispevky">
         <!-- Nadpis -->
         <div class="absolute top-0 left-0 right-0 transform -translate-y-1/2 flex justify-center">
-            <h2 class="text-3xl font-bold text-center px-8 py-4 rounded-full shadow-lg" style="color: #fed501; background: #f8fafc;">
-                Nejnovější příspěvky
+            <h2 class="text-3xl font-bold text-center px-8 py-4 rounded-full shadow-lg text-brand bg-slate-50">
+                {{ $search !== '' ? 'Výsledky hledání' : 'Nejnovější příspěvky' }}
             </h2>
         </div>
 
         <!-- Obsah -->
         <div class="container mx-auto px-4 pt-16 pb-16">
+            <form method="GET" action="{{ route('home') }}#prispevky" class="max-w-xl mx-auto mb-10 flex gap-2" role="search">
+                <label for="q" class="sr-only">Hledat v příspěvcích</label>
+                <input type="search" name="q" id="q" value="{{ $search }}"
+                       placeholder="Hledat v příspěvcích…"
+                       class="flex-1 px-4 py-2 rounded-lg border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand">
+                <button type="submit" class="px-5 py-2 rounded-lg bg-brand text-black font-medium">Hledat</button>
+                @if($search !== '')
+                    <a href="{{ route('home') }}#prispevky" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white">Zrušit</a>
+                @endif
+            </form>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse ($posts as $post)
-                    <a href="{{ route('posts.show', $post) }}" class="block group">
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden relative h-full flex flex-col transition-transform duration-300 hover:-translate-y-2">
-                            <!-- Kategorie tag -->
-                            <div class="absolute top-2 right-2 z-10">
-                                <span class="bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm" 
-                                      style="color: #fed501;">
-                                    {{ $post->category->name }}
-                                </span>
-                            </div>
-
-                            <!-- Obrázek -->
-                            <div class="overflow-hidden h-64 flex-shrink-0">
-                                @if($post->thumbnail_path)
-                                    <img src="{{ asset('storage/' . $post->thumbnail_path) }}" 
-                                         alt="{{ $post->title }}"
-                                         class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
-                                @elseif($post->images->isNotEmpty())
-                                    <img src="{{ asset('storage/' . $post->images->first()->image_path) }}" 
-                                         alt="{{ $post->title }}"
-                                         class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
-                                @else
-                                    <img src="{{ asset('images/defaults/default.jpg') }}" 
-                                         alt="{{ $post->title }}"
-                                         class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
-                                @endif
-                            </div>
-
-                            <!-- Obsah -->
-                            <div class="p-6 flex-grow flex flex-col">
-                                <h2 class="text-xl font-bold mb-2" style="color: #fed501;">{{ $post->title }}</h2>
-                                <p class="text-gray-600 mb-4 flex-grow">
-                                    {!! Str::limit(html_entity_decode(strip_tags($post->content), ENT_QUOTES, 'UTF-8'), 100) !!}
-                                </p>
-                                <div class="flex justify-end mt-auto">
-                                    <span class="px-4 py-2 rounded-lg transition-colors inline-flex items-center"
-                                          style="background-color: #fed501; color: black;">
-                                        Číst více
-                                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                        </svg>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
+                    <x-post-card :post="$post" />
                 @empty
                     <div class="col-span-full text-center py-12">
-                        <p class="text-gray-600">Zatím zde nejsou žádné příspěvky.</p>
+                        <p class="text-gray-600">
+                            {{ $search !== '' ? "Pro „{$search}“ jsme nic nenašli." : 'Zatím zde nejsou žádné příspěvky.' }}
+                        </p>
                     </div>
                 @endforelse
             </div>

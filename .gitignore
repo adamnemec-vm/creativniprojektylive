@@ -22,7 +22,8 @@ yarn-error.log
 /.zed
 /creativniprojekty
 /composer.phar
-/database.sql
+/*.sql
+/*.sql.gz
 /.git.tar.gz
 /c
 /public/info.php
