@@ -12,6 +12,6 @@ class PostController extends Controller
         // Koncepty vidí jen autor a administrátor (náhled), ostatním 404.
         abort_unless(Gate::allows('view', $post), 404);
 
-        return view('posts.show', ['post' => $post->load(['category', 'images'])]);
+        return view('posts.show', ['post' => $post->load(['category', 'images', 'workType', 'schoolYear', 'grade'])]);
     }
 }

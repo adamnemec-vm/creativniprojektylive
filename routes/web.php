@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\FilterOptionController;
 use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -25,6 +26,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::middleware('can:admin')->group(function () {
         Route::resource('users', UserController::class)->except('show');
         Route::resource('categories', AdminCategoryController::class)->except('show');
+        Route::resource('filters', FilterOptionController::class)->except('show');
     });
 });
 

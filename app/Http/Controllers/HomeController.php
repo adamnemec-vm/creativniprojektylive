@@ -9,19 +9,13 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $search = trim((string) $request->query('q'));
-
         $posts = Post::published()
+            ->listing($request->query())
             ->with(['category', 'images'])
-            ->when($search !== '', function ($query) use ($search) {
-                $query->where(fn ($q) => $q
-                    ->where('title', 'like', "%{$search}%")
-                    ->orWhere('content', 'like', "%{$search}%"));
-            })
             ->latest('published_at')
             ->paginate(9)
             ->withQueryString();
 
-        return view('home', compact('posts', 'search'));
+        return view('home', compact('posts'));
     }
 }

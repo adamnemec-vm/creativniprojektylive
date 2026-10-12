@@ -41,6 +41,26 @@
             </select>
         </div>
 
+        <div class="mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                @foreach($filterGroups as $filter => $options)
+                    @php($config = \App\Models\FilterOption::FILTERS[$filter])
+                    <div>
+                        <label for="{{ $config['column'] }}" class="block mb-2 text-brand">{{ $config['label'] }}</label>
+                        <select name="{{ $config['column'] }}" id="{{ $config['column'] }}" class="{{ $inputClass }}" required>
+                            <option value="">Vyberte…</option>
+                            @foreach($options as $option)
+                                <option value="{{ $option->id }}" @selected(old($config['column'], $post->{$config['column']}) == $option->id)>
+                                    {{ $option->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endforeach
+            </div>
+            <p class="text-gray-400 text-sm mt-1">Podle těchto údajů návštěvníci filtrují práce na webu.</p>
+        </div>
+
         <div class="mb-6">
             <label for="content" class="block mb-2 text-brand">Obsah příspěvku</label>
             <textarea name="content" id="content" rows="10" class="{{ $inputClass }}">{{ old('content', $post->content) }}</textarea>

@@ -60,13 +60,17 @@
     </div>
 
     <!-- Výpis příspěvků -->
-    <div class="container mx-auto px-6 lg:px-8 pb-24 max-w-7xl">
+    <div class="container mx-auto px-6 lg:px-8 pb-24 max-w-7xl scroll-mt-28" id="prispevky">
+        <x-post-filters :category="$category" />
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($posts as $post)
                 <x-post-card :post="$post" />
             @empty
                 <div class="col-span-full text-center py-12">
-                    <p class="text-gray-600">V této kategorii zatím nejsou žádné příspěvky.</p>
+                    <p class="text-gray-600">
+                        {{ \App\Models\FilterOption::isFiltering(request()->query()) ? 'Zvoleným filtrům neodpovídá žádný příspěvek.' : 'V této kategorii zatím nejsou žádné příspěvky.' }}
+                    </p>
                 </div>
             @endforelse
             </div>

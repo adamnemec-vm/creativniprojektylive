@@ -38,6 +38,9 @@
                 <a href="{{ route('admin.categories.index') }}" class="{{ $navLink('admin.categories.*') }} transition-colors">
                     Kategorie
                 </a>
+                <a href="{{ route('admin.filters.index') }}" class="{{ $navLink('admin.filters.*') }} transition-colors">
+                    Filtry
+                </a>
                 <a href="{{ route('admin.users.index') }}" class="{{ $navLink('admin.users.*') }} transition-colors">
                     Uživatelé
                 </a>

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+[x-cloak] {
+    display: none !important;
+}
+
 .bg-grid-pattern {
     background-image: 
         linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),

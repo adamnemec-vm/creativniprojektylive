@@ -26,6 +26,17 @@ class PostFactory extends Factory
         ];
     }
 
+    public function withFilters(?int $workType = null, ?int $schoolYear = null, ?int $grade = null): static
+    {
+        $pick = fn (string $filter) => \App\Models\FilterOption::where('filter', $filter)->inRandomOrder()->value('id');
+
+        return $this->state(fn () => [
+            'work_type_id' => $workType ?? $pick('work_type'),
+            'school_year_id' => $schoolYear ?? $pick('school_year'),
+            'grade_id' => $grade ?? $pick('grade'),
+        ]);
+    }
+
     public function draft(): static
     {
         return $this->state(fn () => ['published_at' => null]);

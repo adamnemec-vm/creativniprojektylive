@@ -23,10 +23,23 @@
             <div class="p-6 flex justify-between items-start gap-6 bg-gray-50 border-b">
                 <div class="flex-1">
                     <h1 class="text-2xl font-bold mb-3 text-brand">{{ $post->title }}</h1>
-                    <div class="flex items-center gap-4 text-gray-600 text-sm mb-2">
-                        <span>{{ $post->created_at->format('d.m.Y') }}</span>
-                        <span>{{ $post->category->name }}</span>
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-gray-600 text-sm mb-3">
+                        <span>{{ ($post->published_at ?? $post->created_at)->format('d.m.Y') }}</span>
+                        <a href="{{ route('categories.show', $post->category) }}" class="hover:text-black">{{ $post->category->name }}</a>
                     </div>
+                    @if($badges = $post->filterBadges())
+                        <ul class="flex flex-wrap gap-2" aria-label="Zařazení práce">
+                            @foreach($badges as $badge)
+                                <li>
+                                    <a href="{{ route('home', [$badge['param'] => $badge['option']->id]) }}#prispevky"
+                                       title="{{ $badge['label'] }} – zobrazit další takové práce"
+                                       class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-black text-brand hover:bg-gray-800 transition-colors">
+                                        {{ $badge['option']->name }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
                 @if($post->thumbnail_path)
                     <div class="flex-shrink-0">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Models\Category;
+use App\Models\FilterOption;
 use App\Models\Post;
 use App\Services\HtmlSanitizer;
 use App\Services\ImageStorage;
@@ -30,6 +31,8 @@ class PostController extends Controller
             $query->where('posts.user_id', $request->user()->id);
         }
 
+        $missingFiltersCount = (clone $query)->missingFilters()->count();
+
         if ($request->filled('search')) {
             $query->where('posts.title', 'like', '%'.$request->search.'%');
         }
@@ -39,6 +42,7 @@ class PostController extends Controller
                 'published' => $query->published(),
                 'scheduled' => $query->where('posts.published_at', '>', now()),
                 'draft' => $query->whereNull('posts.published_at'),
+                'incomplete' => $query->missingFilters(),
                 default => null,
             };
         }
@@ -54,7 +58,7 @@ class PostController extends Controller
 
         $posts = $query->paginate(15)->withQueryString();
 
-        return view('admin.posts.index', compact('posts'));
+        return view('admin.posts.index', compact('posts', 'missingFiltersCount'));
     }
 
     public function create()
@@ -62,6 +66,7 @@ class PostController extends Controller
         return view('admin.posts.create', [
             'post' => new Post,
             'categories' => Category::orderBy('name')->get(),
+            'filterGroups' => FilterOption::grouped(),
         ]);
     }
 
@@ -76,6 +81,9 @@ class PostController extends Controller
                     'slug' => Post::uniqueSlug($data['slug'] ?? $data['title']),
                     'content' => $this->sanitizer->clean($data['content']),
                     'category_id' => $data['category_id'],
+                    'work_type_id' => $data['work_type_id'],
+                    'school_year_id' => $data['school_year_id'],
+                    'grade_id' => $data['grade_id'],
                     'user_id' => $request->user()->id,
                     'published_at' => $request->publishedAt(),
                 ]);
@@ -94,6 +102,7 @@ class PostController extends Controller
         return view('admin.posts.edit', [
             'post' => $post->load('images'),
             'categories' => Category::orderBy('name')->get(),
+            'filterGroups' => FilterOption::grouped(),
         ]);
     }
 
@@ -112,6 +121,9 @@ class PostController extends Controller
                     'slug' => filled($data['slug'] ?? null) ? $data['slug'] : $post->slug,
                     'content' => $this->sanitizer->clean($data['content']),
                     'category_id' => $data['category_id'],
+                    'work_type_id' => $data['work_type_id'],
+                    'school_year_id' => $data['school_year_id'],
+                    'grade_id' => $data['grade_id'],
                     'published_at' => $request->publishedAt($post),
                 ]);
 

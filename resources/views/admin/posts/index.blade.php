@@ -25,6 +25,17 @@
         </a>
     </div>
 
+    @if($missingFiltersCount > 0 && request('status') !== 'incomplete')
+        <div class="mb-6 rounded-lg border border-yellow-600 bg-yellow-900/30 p-4 text-sm flex flex-wrap items-center justify-between gap-3">
+            <span>
+                <strong>{{ $missingFiltersCount }}</strong>
+                {{ $missingFiltersCount === 1 ? 'příspěvek nemá' : ($missingFiltersCount < 5 ? 'příspěvky nemají' : 'příspěvků nemá') }}
+                vyplněný typ práce, školní rok nebo ročník, takže se při filtrování na webu nezobrazí.
+            </span>
+            <a href="{{ route('admin.posts.index', ['status' => 'incomplete']) }}" class="px-3 py-1.5 rounded-lg bg-brand text-black whitespace-nowrap">Zobrazit je</a>
+        </div>
+    @endif
+
     <div class="mb-6 bg-gray-900 rounded-lg shadow-lg p-4">
         <form method="GET" action="{{ route('admin.posts.index') }}" class="flex flex-wrap items-center gap-4">
             <input type="text" name="search" value="{{ request('search') }}"
@@ -35,6 +46,7 @@
                 <option value="published" @selected(request('status') === 'published')>Publikované</option>
                 <option value="scheduled" @selected(request('status') === 'scheduled')>Naplánované</option>
                 <option value="draft" @selected(request('status') === 'draft')>Koncepty</option>
+                <option value="incomplete" @selected(request('status') === 'incomplete')>Bez zařazení</option>
             </select>
             @if(request('sort_by'))
                 <input type="hidden" name="sort_by" value="{{ request('sort_by') }}">
@@ -84,6 +96,9 @@
                                   @if($post->published_at) title="{{ $post->published_at->format('d.m.Y H:i') }}" @endif>
                                 {{ $post->statusLabel() }}
                             </span>
+                            @unless($post->hasAllFilters())
+                                <span class="ml-1 px-2 py-1 rounded text-xs bg-yellow-700 text-white" title="Chybí typ práce, školní rok nebo ročník">Bez zařazení</span>
+                            @endunless
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $post->created_at->format('d.m.Y H:i') }}</td>
                         <td class="px-6 py-4">

@@ -85,27 +85,20 @@
         <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-100"></div>
     </div>
 
+    @php($filtering = \App\Models\FilterOption::isFiltering(request()->query()))
+
     <!-- Sekce s příspěvky -->
     <div class="relative bg-gray-100" id="prispevky">
         <!-- Nadpis -->
         <div class="absolute top-0 left-0 right-0 transform -translate-y-1/2 flex justify-center">
             <h2 class="text-3xl font-bold text-center px-8 py-4 rounded-full shadow-lg text-brand bg-slate-50">
-                {{ $search !== '' ? 'Výsledky hledání' : 'Nejnovější příspěvky' }}
+                {{ $filtering ? 'Výsledky hledání' : 'Nejnovější příspěvky' }}
             </h2>
         </div>
 
         <!-- Obsah -->
         <div class="container mx-auto px-4 pt-16 pb-16">
-            <form method="GET" action="{{ route('home') }}#prispevky" class="max-w-xs ml-auto mb-6 flex gap-2 text-sm" role="search">
-                <label for="q" class="sr-only">Hledat v příspěvcích</label>
-                <input type="search" name="q" id="q" value="{{ $search }}"
-                       placeholder="Hledat v příspěvcích…"
-                       class="flex-1 min-w-0 px-3 py-1.5 rounded-md border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand">
-                <button type="submit" class="px-3 py-1.5 rounded-md bg-brand text-black font-medium">Hledat</button>
-                @if($search !== '')
-                    <a href="{{ route('home') }}#prispevky" class="px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 bg-white">Zrušit</a>
-                @endif
-            </form>
+            <x-post-filters />
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse ($posts as $post)
@@ -113,7 +106,7 @@
                 @empty
                     <div class="col-span-full text-center py-12">
                         <p class="text-gray-600">
-                            {{ $search !== '' ? "Pro „{$search}“ jsme nic nenašli." : 'Zatím zde nejsou žádné příspěvky.' }}
+                            {{ $filtering ? 'Zvoleným filtrům neodpovídá žádný příspěvek.' : 'Zatím zde nejsou žádné příspěvky.' }}
                         </p>
                     </div>
                 @endforelse

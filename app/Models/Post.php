@@ -18,6 +18,9 @@ class Post extends Model
         'title',
         'content',
         'category_id',
+        'work_type_id',
+        'school_year_id',
+        'grade_id',
         'user_id',
         'thumbnail_path',
         'slug',
@@ -39,6 +42,66 @@ class Post extends Model
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function workType(): BelongsTo
+    {
+        return $this->belongsTo(FilterOption::class, 'work_type_id');
+    }
+
+    public function schoolYear(): BelongsTo
+    {
+        return $this->belongsTo(FilterOption::class, 'school_year_id');
+    }
+
+    public function grade(): BelongsTo
+    {
+        return $this->belongsTo(FilterOption::class, 'grade_id');
+    }
+
+    /** Vyplněné hodnoty filtrů v pořadí Typ práce, Školní rok, Ročník: [label, param, option]. */
+    public function filterBadges(): array
+    {
+        $badges = [];
+        foreach (FilterOption::FILTERS as $filter => $config) {
+            $option = $this->{Str::camel($filter)};
+            if ($option) {
+                $badges[] = ['label' => $config['label'], 'param' => $config['param'], 'option' => $option];
+            }
+        }
+
+        return $badges;
+    }
+
+    public function scopeMissingFilters(Builder $query): void
+    {
+        $query->where(fn ($q) => $q
+            ->whereNull('posts.work_type_id')
+            ->orWhereNull('posts.school_year_id')
+            ->orWhereNull('posts.grade_id'));
+    }
+
+    public function hasAllFilters(): bool
+    {
+        return $this->work_type_id && $this->school_year_id && $this->grade_id;
+    }
+
+    /** Fulltext a filtry z veřejného výpisu (?q=, ?typ=, ?rok=, ?rocnik=). */
+    public function scopeListing(Builder $query, array $input): void
+    {
+        $search = is_string($input['q'] ?? null) ? trim($input['q']) : '';
+
+        $query->when($search !== '', fn ($q) => $q->where(fn ($q) => $q
+            ->where('title', 'like', "%{$search}%")
+            ->orWhere('content', 'like', "%{$search}%")));
+
+        // V rámci skupiny "nebo" (klauzurní i maturitní), mezi skupinami "a zároveň".
+        foreach (FilterOption::FILTERS as $config) {
+            $ids = FilterOption::parseIds($input[$config['param']] ?? null);
+            if ($ids !== []) {
+                $query->whereIn($config['column'], $ids);
+            }
+        }
     }
 
     public function images(): HasMany

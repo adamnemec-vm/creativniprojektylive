@@ -16,10 +16,15 @@ class PostManagementTest extends TestCase
 
     private function payload(array $overrides = []): array
     {
+        $option = fn (string $filter) => \App\Models\FilterOption::where('filter', $filter)->value('id');
+
         return array_merge([
             'title' => 'Můj projekt',
             'content' => '<p>Obsah</p>',
             'category_id' => Category::factory()->create()->id,
+            'work_type_id' => $option('work_type'),
+            'school_year_id' => $option('school_year'),
+            'grade_id' => $option('grade'),
             'status' => 'published',
         ], $overrides);
     }
