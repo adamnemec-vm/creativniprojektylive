@@ -25,6 +25,16 @@ class PublicPagesTest extends TestCase
             ->assertDontSee('Budoucí příspěvek');
     }
 
+    public function test_pages_link_chc_favicons(): void
+    {
+        $this->get('/')->assertOk()
+            ->assertSee('<link rel="icon" href="'.asset('favicon.ico').'?v=2"', false)
+            ->assertSee('<link rel="apple-touch-icon"', false);
+
+        $this->assertGreaterThan(0, filesize(public_path('favicon.ico')));
+        $this->assertSame(192, getimagesize(public_path('icon-192.png'))[0]);
+    }
+
     public function test_field_cards_link_to_category_pages(): void
     {
         $vyvojari = Category::factory()->create(['name' => 'Vývojáři']);

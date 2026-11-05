@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
     <title>Administrace | Projekty CHC</title>
+    @include('partials.favicons')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-black text-white">

@@ -14,6 +14,7 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="@yield('og_image', asset('images/defaults/Logo.png'))">
     <meta name="twitter:card" content="summary_large_image">
+    @include('partials.favicons')
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
