@@ -25,6 +25,22 @@ class PublicPagesTest extends TestCase
             ->assertDontSee('Budoucí příspěvek');
     }
 
+    public function test_field_cards_link_to_category_pages(): void
+    {
+        $vyvojari = Category::factory()->create(['name' => 'Vývojáři']);
+        $grafici = Category::factory()->create(['name' => 'Grafici']);
+        Category::factory()->create(['name' => 'Filmaři (přejmenováno)']);
+
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertStringContainsString('href="'.route('categories.show', $vyvojari).'" aria-label="Vývojáři – zobrazit práce oboru"', $html);
+        $this->assertStringContainsString('href="'.route('categories.show', $grafici).'" aria-label="Grafici – zobrazit práce oboru"', $html);
+        // Karta Filmaři bez odpovídající kategorie se zobrazí, jen bez odkazu.
+        $this->assertStringContainsString('<h3 class="text-2xl font-bold text-brand">Filmaři</h3>', $html);
+        $this->assertStringNotContainsString('Filmaři – zobrazit práce oboru', $html);
+        $this->assertSame(2, substr_count($html, 'Prohlédnout práce'));
+    }
+
     public function test_excerpt_does_not_render_html_from_content(): void
     {
         Post::factory()->create(['content' => '<p>&lt;img src=x onerror=alert(1)&gt;</p>']);

@@ -15,48 +15,55 @@
                             Naše zaměření
                         </h2>
                         
+                        @php
+                            // Karty se k oborům (kategoriím) přiřazují podle názvu.
+                            $fields = [
+                                [
+                                    'name' => 'Vývojáři',
+                                    'icon' => 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
+                                    'text' => 'Naši vývojáři se zaměřují na tvorbu moderních webových a mobilních aplikací s důrazem na efektivitu, bezpečnost a skvělý uživatelský zážitek. Využíváme nejnovější technologie a dbáme na čistý, kvalitní kód.',
+                                ],
+                                [
+                                    'name' => 'Grafici',
+                                    'icon' => 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
+                                    'text' => 'Náš grafický tým tvoří originální vizuální identity a designová řešení – od loga a webdesignu až po komplexní branding. Spojujeme kreativitu s funkčností, aby každý projekt vynikl a oslovil cílovou skupinu.',
+                                ],
+                                [
+                                    'name' => 'Filmaři',
+                                    'icon' => 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z',
+                                    'text' => 'Vyprávíme příběhy prostřednictvím obrazu a zvuku. Dokážeme stvořit reklamní spot, dokumentární snímek či třeba krátký film o vaší firmě. Naši mladí filmaři jsou plní neotřelých nápadů.',
+                                ],
+                            ];
+                        @endphp
+
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                            <div class="group h-full">
-                                <div class="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl transform group-hover:-translate-y-2 transition-all duration-300 border-t-4 h-full flex flex-col border-brand">
-                                    <div class="flex items-center mb-6">
-                                        <svg class="w-8 h-8 mr-3 flex-shrink-0 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                                        </svg>
-                                        <h3 class="text-2xl font-bold text-brand">Vývojáři</h3>
+                            @foreach($fields as $field)
+                                @php($category = $categoriesByName->get($field['name']))
+                                {{-- Bez odpovídající kategorie (např. po přejmenování) zůstane karta bez odkazu. --}}
+                                <{{ $category ? 'a' : 'div' }}
+                                    @if($category) href="{{ route('categories.show', $category) }}" aria-label="{{ $field['name'] }} – zobrazit práce oboru" @endif
+                                    class="group h-full block rounded-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-brand focus-visible:ring-offset-2">
+                                    <div class="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl transform group-hover:-translate-y-2 group-hover:shadow-2xl transition-all duration-300 border-t-4 h-full flex flex-col border-brand">
+                                        <div class="flex items-center mb-6">
+                                            <svg class="w-8 h-8 mr-3 flex-shrink-0 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $field['icon'] }}"/>
+                                            </svg>
+                                            <h3 class="text-2xl font-bold text-brand">{{ $field['name'] }}</h3>
+                                        </div>
+                                        <p class="leading-relaxed text-black flex-grow">
+                                            {{ $field['text'] }}
+                                        </p>
+                                        @if($category)
+                                            <span class="mt-6 inline-flex items-center gap-2 font-semibold text-black">
+                                                Prohlédnout práce
+                                                <svg class="w-4 h-4 text-brand transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"/>
+                                                </svg>
+                                            </span>
+                                        @endif
                                     </div>
-                                    <p class="leading-relaxed text-black flex-grow">
-                                        Naši vývojáři se zaměřují na tvorbu moderních webových a mobilních aplikací s důrazem na efektivitu, bezpečnost a skvělý uživatelský zážitek. Využíváme nejnovější technologie a dbáme na čistý, kvalitní kód.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="group h-full">
-                                <div class="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl transform group-hover:-translate-y-2 transition-all duration-300 border-t-4 h-full flex flex-col border-brand">
-                                    <div class="flex items-center mb-6">
-                                        <svg class="w-8 h-8 mr-3 flex-shrink-0 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                        </svg>
-                                        <h3 class="text-2xl font-bold text-brand">Grafici</h3>
-                                    </div>
-                                    <p class="leading-relaxed text-black flex-grow">
-                                        Náš grafický tým tvoří originální vizuální identity a designová řešení – od loga a webdesignu až po komplexní branding. Spojujeme kreativitu s funkčností, aby každý projekt vynikl a oslovil cílovou skupinu.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="group h-full">
-                                <div class="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl transform group-hover:-translate-y-2 transition-all duration-300 border-t-4 h-full flex flex-col border-brand">
-                                    <div class="flex items-center mb-6">
-                                        <svg class="w-8 h-8 mr-3 flex-shrink-0 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                                        </svg>
-                                        <h3 class="text-2xl font-bold text-brand">Filmaři</h3>
-                                    </div>
-                                    <p class="leading-relaxed text-black flex-grow">
-                                        Vyprávíme příběhy prostřednictvím obrazu a zvuku. Dokážeme stvořit reklamní spot, dokumentární snímek či třeba krátký film o vaší firmě. Naši mladí filmaři jsou plní neotřelých nápadů.
-                                    </p>
-                                </div>
-                            </div>
+                                </{{ $category ? 'a' : 'div' }}>
+                            @endforeach
                         </div>
                     </div>
                 </div>

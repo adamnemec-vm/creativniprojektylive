@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,8 @@ class HomeController extends Controller
             ->paginate(9)
             ->withQueryString();
 
-        return view('home', compact('posts'));
+        $categoriesByName = Category::all()->keyBy('name');
+
+        return view('home', compact('posts', 'categoriesByName'));
     }
 }
